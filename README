@@ -4,7 +4,7 @@ Copyright (C) 2013 Thomas März (maerz@maths.ox.ac.uk) & Martin Robinson (martin
 
 To build the plug-in...
 
-	cd mlinpaintgui/Gimp/NewGimpPlugin/	
+	cd inpaintGimpPlugin	
 	./configure
 	make
 

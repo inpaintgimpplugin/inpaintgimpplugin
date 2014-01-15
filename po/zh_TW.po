@@ -1,0 +1,114 @@
+# Traditional chinese translation for gimp-plugin-template.
+# Copyright (C) 2001 Free Software Foundation, Inc.
+# Abel Cheung <maddog@linux.org.hk>, 2001.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gimp-plugin-template 1.2.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-12-29 16:41+0100\n"
+"PO-Revision-Date: 2001-11-05 21:53+0800\n"
+"Last-Translator: Abel Cheung <maddog@linux.org.hk>\n"
+"Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/interface.c:85
+msgid "GIMP Plug-In Template"
+msgstr "GIMP Plug-In 樣本"
+
+#. gimp_scale_entry_new() examples
+#: src/interface.c:100
+msgid "ScaleEntry Examples"
+msgstr "縮放項目例子"
+
+#: src/interface.c:113
+msgid "Dummy 1:"
+msgstr "範例 1："
+
+#: src/interface.c:116
+msgid "Dummy scale entry 1"
+msgstr "範例縮放項目 1："
+
+#: src/interface.c:122
+msgid "Dummy 2:"
+msgstr "範例 2："
+
+#: src/interface.c:125
+msgid "Dummy scale entry 2"
+msgstr "範例縮放項目 2："
+
+#: src/interface.c:131
+msgid "Dummy 3:"
+msgstr "範例 3："
+
+#: src/interface.c:134
+msgid "Dummy scale entry 3"
+msgstr "範例縮放項目 3："
+
+#. gimp_random_seed_new() example
+#: src/interface.c:141
+msgid "A Random Seed Entry"
+msgstr "亂數種子項目"
+
+#. gimp_coordinates_new() example
+#: src/interface.c:156
+msgid ""
+"A GimpCoordinates Widget\n"
+"Initialized with the Drawable's Size"
+msgstr ""
+"一個 GimpCoordinates 視窗元件\n"
+"設定為可繪物件的尺寸"
+
+#: src/interface.c:174
+msgid "Width:"
+msgstr "寬度："
+
+#: src/interface.c:178
+msgid "Height:"
+msgstr "高度："
+
+#. Image and drawable menus
+#: src/interface.c:186
+msgid "Image and Drawable Menu Examples"
+msgstr "圖像例子"
+
+#: src/interface.c:205
+msgid "Layers:"
+msgstr "圖層："
+
+#: src/interface.c:213
+msgid "RGB Images:"
+msgstr "RGB 圖像："
+
+#: src/main.c:137
+#, fuzzy
+msgid "Plug-In Template..."
+msgstr "GIMP Plug-In 樣本"
+
+#: src/render.c:49
+msgid "This plug-in is just a dummy. It has now finished doing nothing."
+msgstr ""
+
+#~ msgid "Pixmap Examples"
+#~ msgstr "Pixmap 例子"
+
+#~ msgid "Pixmap Buttons:"
+#~ msgstr "Pixmap 按鈕："
+
+#~ msgid "With Text"
+#~ msgstr "配合文字"
+
+#~ msgid "Plain Pixmap:"
+#~ msgstr "普通 Pixmap："
+
+#, fuzzy
+#~ msgid "<Image>/Filters/Misc/Plug-In Template..."
+#~ msgstr "<Image>/濾鏡/其它/增效模組樣本..."
+
+#~ msgid "OK"
+#~ msgstr "確定"
+
+#~ msgid "Cancel"
+#~ msgstr "取消"

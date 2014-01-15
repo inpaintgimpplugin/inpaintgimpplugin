@@ -1,0 +1,42 @@
+GIMP InPainting Plug-In
+=====================
+Copyright (C) 2013 Thomas März (maerz@maths.ox.ac.uk) & Martin Robinson (martin.robinson@maths.ox.ac.uk)
+
+To build the plug-in...
+
+	cd mlinpaintgui/Gimp/NewGimpPlugin/	
+	./configure
+	make
+
+if you want to install for all users...
+
+	sudo make install
+
+or if you want to just install for current user...
+
+	cp src/inpaint-BCT $HOME/.gimp-2.6/plug-ins
+
+(or .gimp-2.8, etc)
+
+ ... and it's there.
+ 
+	
+Batch scripting
+===============
+
+The "example" sub-directory contains an example batch script.
+You first need to copy this to your script directory...
+
+	cp example/batch_script.scm ~/.gimp-2.6/scripts/
+	
+Then you can call this using gimp in batch mode. For example...
+
+	gimp -i -b '(simple-inpaint "newOrleans.png" "newOrleans_mask_bw.png" "output.png")' -b '(gimp-quit 0)'
+	
+Note that the example images "newOrleans.png" and "newOrleans_mask_bw.png"
+are also in the "\example" sub-directory.
+
+
+
+	
+	

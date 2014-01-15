@@ -1,0 +1,115 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gimp-plugin-template 1.2.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-12-29 16:41+0100\n"
+"PO-Revision-Date: 2001-11-25 15:19GMT+0200\n"
+"Last-Translator: Vasif İsmayıloğlu MD <azerb_linux@hotmail.com>\n"
+"Language-Team: Azerbaijani Turkic <linuxaz@azerimail.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 0.9.5\n"
+
+#: src/interface.c:85
+msgid "GIMP Plug-In Template"
+msgstr "GIMP Əlavə Nümunəsi"
+
+#. gimp_scale_entry_new() examples
+#: src/interface.c:100
+msgid "ScaleEntry Examples"
+msgstr "Şkala Girişi Nümunələri"
+
+#: src/interface.c:113
+msgid "Dummy 1:"
+msgstr "Maket 1:"
+
+#: src/interface.c:116
+msgid "Dummy scale entry 1"
+msgstr "Maket şkala girişi 1"
+
+#: src/interface.c:122
+msgid "Dummy 2:"
+msgstr "Maket 2:"
+
+#: src/interface.c:125
+msgid "Dummy scale entry 2"
+msgstr "Maket şkala girişi 2"
+
+#: src/interface.c:131
+msgid "Dummy 3:"
+msgstr "Maket 3:"
+
+#: src/interface.c:134
+msgid "Dummy scale entry 3"
+msgstr "Maket şkala girişi 3"
+
+#. gimp_random_seed_new() example
+#: src/interface.c:141
+msgid "A Random Seed Entry"
+msgstr "TƏsadüfi Ox Girişi"
+
+#. gimp_coordinates_new() example
+#: src/interface.c:156
+msgid ""
+"A GimpCoordinates Widget\n"
+"Initialized with the Drawable's Size"
+msgstr ""
+"GimpCoordinates Pəncərəziyi\n"
+"Çəkən Böyüklüyü ilə hazırlandı"
+
+#: src/interface.c:174
+msgid "Width:"
+msgstr "En :"
+
+#: src/interface.c:178
+msgid "Height:"
+msgstr "Hündürlük :"
+
+#. Image and drawable menus
+#: src/interface.c:186
+msgid "Image and Drawable Menu Examples"
+msgstr "Şəkil və Çəkilən Rəsm Menü Nümunələri"
+
+#: src/interface.c:205
+msgid "Layers:"
+msgstr "Laylar:"
+
+#: src/interface.c:213
+msgid "RGB Images:"
+msgstr "RGB Şəkillər:"
+
+#: src/main.c:137
+#, fuzzy
+msgid "Plug-In Template..."
+msgstr "GIMP Əlavə Nümunəsi"
+
+#: src/render.c:49
+msgid "This plug-in is just a dummy. It has now finished doing nothing."
+msgstr ""
+
+#~ msgid "Pixmap Examples"
+#~ msgstr "Şəkil Nümunələri"
+
+#~ msgid "Pixmap Buttons:"
+#~ msgstr "Şəkil Düymələri:"
+
+#~ msgid "With Text"
+#~ msgstr "Mətnli"
+
+#~ msgid "Plain Pixmap:"
+#~ msgstr "Düz Şəkil:"
+
+#, fuzzy
+#~ msgid "<Image>/Filters/Misc/Plug-In Template..."
+#~ msgstr "<Image>/Süzgəclər/Müxtəlif/Əlavə Nümunəsi..."
+
+#~ msgid "OK"
+#~ msgstr "Oldu"
+
+#~ msgid "Cancel"
+#~ msgstr "Ləğv Et"

@@ -1,0 +1,116 @@
+# Swedish messages for gimp-plugin-template.
+# Copyright (C) 2001 Free Software Foundation, Inc.
+# Christian Rose <menthos@menthos.com>, 2001.
+#
+# $Id: sv.po,v 1.5 2004/02/02 14:10:03 neo Exp $
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gimp-plugin-template\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-12-29 16:41+0100\n"
+"PO-Revision-Date: 2001-11-09 15:12+0100\n"
+"Last-Translator: Christian Rose <menthos@menthos.com>\n"
+"Language-Team: Swedish <sv@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/interface.c:85
+msgid "GIMP Plug-In Template"
+msgstr "Mall för GIMP-insticksmodul"
+
+#. gimp_scale_entry_new() examples
+#: src/interface.c:100
+msgid "ScaleEntry Examples"
+msgstr "Skalfältexempel"
+
+#: src/interface.c:113
+msgid "Dummy 1:"
+msgstr "Exempel 1:"
+
+#: src/interface.c:116
+msgid "Dummy scale entry 1"
+msgstr "Exempelskalfält 1"
+
+#: src/interface.c:122
+msgid "Dummy 2:"
+msgstr "Exempel 2:"
+
+#: src/interface.c:125
+msgid "Dummy scale entry 2"
+msgstr "Exempelskalfält 2"
+
+#: src/interface.c:131
+msgid "Dummy 3:"
+msgstr "Exempel 3:"
+
+#: src/interface.c:134
+msgid "Dummy scale entry 3"
+msgstr "Exempelskalfält 3"
+
+#. gimp_random_seed_new() example
+#: src/interface.c:141
+msgid "A Random Seed Entry"
+msgstr "Ett slumpfrösfält"
+
+#. gimp_coordinates_new() example
+#: src/interface.c:156
+msgid ""
+"A GimpCoordinates Widget\n"
+"Initialized with the Drawable's Size"
+msgstr ""
+"En GimpCoordinates-widget\n"
+"Initierad med den ritbara ytans storlek"
+
+#: src/interface.c:174
+msgid "Width:"
+msgstr "Bredd:"
+
+#: src/interface.c:178
+msgid "Height:"
+msgstr "Höjd:"
+
+#. Image and drawable menus
+#: src/interface.c:186
+msgid "Image and Drawable Menu Examples"
+msgstr "Menyexempel för bild och ritbara ytan"
+
+#: src/interface.c:205
+msgid "Layers:"
+msgstr "Lager:"
+
+#: src/interface.c:213
+msgid "RGB Images:"
+msgstr "RGB-bilder:"
+
+#: src/main.c:137
+#, fuzzy
+msgid "Plug-In Template..."
+msgstr "Mall för GIMP-insticksmodul"
+
+#: src/render.c:49
+msgid "This plug-in is just a dummy. It has now finished doing nothing."
+msgstr ""
+
+#~ msgid "Pixmap Examples"
+#~ msgstr "Bildexempel"
+
+#~ msgid "Pixmap Buttons:"
+#~ msgstr "Bildknappar:"
+
+#~ msgid "With Text"
+#~ msgstr "Med text"
+
+#~ msgid "Plain Pixmap:"
+#~ msgstr "Vanlig bild:"
+
+#, fuzzy
+#~ msgid "<Image>/Filters/Misc/Plug-In Template..."
+#~ msgstr "<Image>/Filter/Diverse/Mall för insticksmodul..."
+
+#~ msgid "OK"
+#~ msgstr "OK"
+
+#~ msgid "Cancel"
+#~ msgstr "Avbryt"

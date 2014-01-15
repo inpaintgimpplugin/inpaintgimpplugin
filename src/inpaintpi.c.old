@@ -1,0 +1,769 @@
+#include <libgimp/gimp.h>
+#include <libgimp/gimpui.h>
+#include <gtk/gtk.h>
+#include <stdio.h>
+#include <string.h>
+#include "fbtm_inpainter.h"
+
+#define SCALE_WIDTH 125
+#define BOX_SPACING 6
+#define SCALE_MAX 20
+#define CONV_MAX  100
+#define EPS_DIGITS 1
+#define KAPPA_DIGITS 2
+#define SMOOTH_DIGITS 3
+
+#define EPS_DEFAULT          5
+#define KAPPA_DEFAULT    25
+#define SIGMA_DEFAULT    1.41
+#define RHO_DEFAULT        4
+
+#define RED_COEFF_DEFAULT          30
+#define GREEN_COEFF_DEFAULT    59
+#define BLUE_COEFF_SIGMA_DEFAULT    11
+
+//----------------------------------------------------------------------------
+
+#define TABLE_SCALE(ROW, LABEL,TYPE,VALUE,MIN,MAX,DELTA1,DELTA2,DIGITS) \
+    { GtkObject *scale = gimp_scale_entry_new ( \
+			GTK_TABLE (table), 0, ROW, \
+			LABEL, SCALE_WIDTH, 0, \
+			VALUE, MIN, MAX, DELTA1, DELTA2, DIGITS, \
+			TRUE, 0, 0, \
+			NULL, NULL); \
+	g_signal_connect (scale, "value_changed", \
+	G_CALLBACK(gimp_##TYPE##_adjustment_update), &VALUE); }
+
+//			G_CALLBACK(gimp_##TYPE##_adjustment_update), &VALUE); }
+//	g_signal_connect_swapped (scale, "value_changed", \
+//			G_CALLBACK(gimp_preview_invalidate), preview); }
+
+typedef struct
+{
+	gfloat epsilon;
+	gfloat kappa;
+	gfloat sigma;
+	gfloat rho;
+} InpaintParam;
+
+// function prototypes
+static void query (void);
+static void run   (const gchar      *name,
+                   gint              nparams,
+                   const GimpParam  *param,
+                   gint             *nreturn_vals,
+                   GimpParam       **return_vals);
+static GtkWidget * dialog_setup(gchar *name,GimpDrawable *preview_src);
+void dialog_end(GtkWidget *dialog);
+void scale_change(GtkAdjustment *adjustment,gpointer data);
+void save_mask(void);
+void load_mask(void);
+void updatefun(void);
+void set_default_param(void);
+void set_default_coeff(void);
+
+// global variables
+static InpaintParam inpaintparam = {EPS_DEFAULT,KAPPA_DEFAULT,SIGMA_DEFAULT,RHO_DEFAULT};
+
+GimpPlugInInfo PLUG_IN_INFO =
+{
+  NULL,
+  NULL,
+  query,
+  run
+};
+
+GtkObject *epsilon_scale,*kappa_scale,*sigma_scale,*rho_scale;
+GtkObject **globscale;
+GtkLabel **chanlabels;
+gint channels;
+gfloat *convex;
+gfloat *dconvex;
+gint32 imageID;
+gint32 drawID;
+gint anim_mode = 0;
+
+GimpDrawable *drawable;
+GimpDrawable *mask;
+gint rows,cols;
+gint xmin,xmax;
+gint ymin,ymax;
+GimpPixelRgn region;				// region of interest in drawable, read only
+GimpPixelRgn region_out;		// region of interest in drawable, write only
+GimpPixelRgn mregion;			// region of interest in mask, read only
+gint* extrachannels;
+gint n_extrachannels;
+guchar *pixel;									// read buffer drawable
+guchar *pixel_out;						// write buffer drawable
+guchar *mpixel;								// read buffer mask
+gfloat *the_image;						// float copy of drawable
+gfloat *the_mask;							// float copy of mask
+gchar *image_name;
+
+// main function
+MAIN()
+
+
+// functions
+static void
+query (void)
+{
+  static GimpParamDef args[] =
+  {
+    {
+      GIMP_PDB_INT32,
+      "run-mode",
+      "Run mode"
+    },
+    {
+      GIMP_PDB_IMAGE,
+      "image",
+      "Input image"
+    },
+    {
+      GIMP_PDB_DRAWABLE,
+      "drawable",
+      "Input drawable"
+    }
+  };
+
+  gimp_install_procedure (
+    "plug-in-inpaint",
+    "Inpainting Based on Coherence Transport",
+    "Inpainting Based on Coherence Transport",
+    "Tom März",
+    "Copyright Tom März",
+    "2006",
+    "_Inpainting...",
+    "RGB*, GRAY*",
+    GIMP_PLUGIN,
+    G_N_ELEMENTS (args), 0,
+    args, NULL);
+
+  gimp_plugin_menu_register ("plug-in-inpaint",
+                             "<Image>/Filters/Misc");
+}
+
+static void
+run (const gchar      *name,
+     gint              nparams,
+     const GimpParam  *param,
+     gint             *nreturn_vals,
+     GimpParam       **return_vals)
+{
+  static GimpParam  values[1];
+  GimpPDBStatusType status = GIMP_PDB_SUCCESS;
+  GimpRunMode       run_mode;
+
+  /* Setting mandatory output values */
+  *nreturn_vals = 1;
+  *return_vals  = values;
+
+  values[0].type = GIMP_PDB_STATUS;
+  values[0].data.d_status = status;
+
+  /* Getting run_mode - we won't display a dialog if 
+   * we are in NONINTERACTIVE mode */
+  run_mode = (GimpRunMode) param[0].data.d_int32;
+
+	/*
+	GimpDrawable *drawable;
+	GimpDrawable *mask;
+	gint rows,cols;
+	gint xmin,xmax;
+	gint ymin,ymax;
+	GimpPixelRgn region;				// region of interest in drawable, read only
+	GimpPixelRgn region_out;		// region of interest in drawable, write only
+	GimpPixelRgn mregion;			// region of interest in mask, read only
+	gint* extrachannels;
+	gint n_extrachannels;
+	guchar *pixel;									// read buffer drawable
+	guchar *pixel_out;						// write buffer drawable
+	guchar *mpixel;								// read buffer mask
+	gfloat *the_image;						// float copy of drawable
+	gfloat *the_mask;							// float copy of mask
+	gchar *image_name;
+	*/
+	gint i,j,c;
+	gint y,k;
+	gint index;
+	GtkWidget *inpaint_dialog;
+
+	if( run_mode == GIMP_RUN_INTERACTIVE )
+	{
+		gimp_get_data("plug-in-inpaint", &inpaintparam);
+
+		imageID = param[1].data.d_image;
+		image_name = gimp_image_get_name(imageID);
+		gimp_image_unset_active_channel(imageID);
+		drawID = gimp_image_get_active_drawable(imageID);
+		
+		channels = gimp_drawable_bpp(drawID);
+		//channels = gimp_drawable_bpp(param[2].data.d_drawable);
+		
+		convex = g_new(gfloat,channels);
+		dconvex = g_new(gfloat,channels);
+
+		for(c = 0 ; c < channels ; c++)
+		{
+			convex[c] = 1.0 / channels;
+			dconvex[c] = 100.0 / channels;		
+		}
+
+		//drawable = gimp_drawable_get(param[2].data.d_drawable);
+		drawable = gimp_drawable_get(drawID);
+		inpaint_dialog = dialog_setup(image_name,drawable);
+		
+		while(gimp_dialog_run(GIMP_DIALOG(inpaint_dialog)) == GTK_RESPONSE_OK)
+		{
+			// init drawbale 
+			gimp_image_unset_active_channel(imageID);
+			drawID = gimp_image_get_active_drawable(imageID);
+			drawable = gimp_drawable_get(drawID);
+			//drawable = gimp_drawable_get(param[2].data.d_drawable);
+
+			if( drawable == NULL )
+			{
+				g_message("Image has been closed -> Exiting plug-in");
+				break;
+			}
+
+			// init  mask
+			// check if there are extra channels, first extra channel contains inpainting mask
+			extrachannels =  gimp_image_get_channels(param[1].data.d_image,&n_extrachannels);
+
+			if( n_extrachannels == 0 )
+			{
+				g_message("Error: Inpainting mask is undefined");
+				continue;
+			}
+			mask = gimp_drawable_get(extrachannels[0]);
+			
+			// init cols ,rows, ..
+			gimp_drawable_mask_bounds(drawable->drawable_id, &xmin, &ymin, &xmax, &ymax);
+			rows = ymax - ymin;
+			cols = xmax - xmin;
+			
+			//g_message("xmin %d xmax %d ymin %d ymax %d maskaddress %d drawad %d",xmin,xmax,ymin,ymax,mask->drawable_id,drawable->drawable_id);
+			//continue;
+
+			// init regions of interest
+			gimp_pixel_rgn_init(&region, drawable, xmin,ymin,cols,rows,FALSE ,FALSE);
+			gimp_pixel_rgn_init(&region_out, drawable, xmin,ymin,cols,rows,TRUE ,TRUE);
+			gimp_pixel_rgn_init(&mregion, mask, xmin,ymin,cols,rows,FALSE ,FALSE);
+			
+			// alloc memory for the buffers
+			pixel = g_new(guchar,channels * cols);
+			pixel_out = g_new(guchar,channels * cols);
+			mpixel = g_new(guchar, cols);
+			the_image = g_new(gfloat,channels * cols * rows);
+			the_mask = g_new(gfloat, cols * rows);
+		
+		
+			// make a float copy of drawable and mask
+			for( y = ymin, i=0 ; y < ymax ; y++, i++)
+			{
+				gimp_pixel_rgn_get_row(&region,pixel,xmin,y,cols);
+				gimp_pixel_rgn_get_row(&mregion,mpixel,xmin,y,cols);
+				
+				for(c = 0 ; c < channels ; c++)
+				{
+						index = ( c * rows + i) * cols;
+		
+						for( j=0, k=0 ; j < cols ; j++ , k+=channels)
+						{
+								the_image[index + j] = (gfloat) (pixel[c + k]);
+		
+								if( c == 0 )
+								{
+									if( mpixel[j] )
+										the_mask[index + j] = 0;
+									else
+										the_mask[index + j] = 1;
+								}
+						}
+				}
+			}
+		
+			// do something
+			GdkCursor *curs =  gdk_cursor_new(GDK_WATCH);
+			gdk_window_set_cursor(inpaint_dialog->window, curs);
+			gtk_widget_show(inpaint_dialog);
+			gimp_progress_init ("Inpainting");
+
+			gfloat parameters[4];
+			parameters[0] = inpaintparam.epsilon;
+			parameters[1] = 20 * inpaintparam.epsilon * (inpaintparam.kappa / 100);
+			parameters[2] = inpaintparam.sigma;
+			parameters[3] = inpaintparam.rho;		
+
+			if(anim_mode)
+			{			
+				//g_message("animation set");
+				FBTMInpainter inpainter(the_image, the_mask, rows, cols, channels,parameters, convex, 1,updatefun,100);
+				inpainter.Execute();
+			}
+			else
+			{
+				//g_message("animation not set");
+				FBTMInpainter inpainter(the_image, the_mask, rows, cols, channels,parameters, convex, 1,NULL,1);
+				inpainter.Execute();
+			}
+
+			//FBTMInpainter inpainter(the_image, the_mask, rows, cols, channels,parameters, convex, 1);
+			//inpainter.Execute();
+
+			gimp_progress_init ("Inpainting done");
+			curs =  gdk_cursor_new(GDK_LEFT_PTR);
+			gdk_window_set_cursor(inpaint_dialog->window, curs);
+			gtk_widget_show(inpaint_dialog);
+
+			// write result back
+			for( y = ymin, i=0 ; y < ymax ; y++, i++)
+			{
+				for(c = 0 ; c < channels ; c++)
+				{
+						index = ( c * rows + i) * cols;
+		
+						for(j=0 , k=0 ; j < cols ; j++ , k+=channels)
+						{
+							pixel_out[k + c] = (guchar) (the_image[index + j]);
+						}
+					}
+				gimp_pixel_rgn_set_row(&region_out,pixel_out,xmin,y,cols);
+			}
+		
+			// dealloc memory
+			g_free(pixel);
+			g_free(mpixel);
+			g_free(pixel_out);
+			g_free(the_image);
+			g_free(the_mask);
+		
+			gimp_drawable_flush(drawable);
+			gimp_drawable_merge_shadow(drawable->drawable_id, TRUE);
+			gimp_drawable_update(drawable->drawable_id,xmin,ymin,cols,rows);
+		
+			gimp_displays_flush();
+		
+			gimp_drawable_detach(drawable);
+			gimp_drawable_detach(mask);
+		}
+
+		dialog_end(inpaint_dialog);
+		g_free(convex);
+		g_free(dconvex);
+
+		gimp_set_data("plug-in-inpaint", &inpaintparam, sizeof(InpaintParam));
+	}
+	else
+	{
+    	g_message("Inpaint plugin supports interactive mode only");
+	}
+}
+
+
+static GtkWidget *dialog_setup(gchar *name,GimpDrawable *preview_src)
+{
+	GtkWidget *dialog;
+	GtkWidget *notebook;
+	GtkWidget *preview;
+	GtkWidget *main_vbox;
+	
+	gchar text[100];
+	sprintf(text,"Inpainting: %s",name);
+
+	// New dialog
+	gimp_ui_init (PLUGIN_NAME, FALSE);
+	dialog = gimp_dialog_new(
+			text, 
+			PLUGIN_NAME,
+			NULL,GTK_DIALOG_DESTROY_WITH_PARENT, // (GtkDialogFlags)0,
+			gimp_standard_help_func, "plug-in-inpaint",
+			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+			GTK_STOCK_OK,     GTK_RESPONSE_OK,
+			NULL);
+
+	// Main vbox	
+	//main_vbox = gtk_vbox_new (FALSE, BOX_SPACING);
+	main_vbox = gtk_vbox_new (FALSE, 20);
+	gtk_container_add (GTK_CONTAINER(GTK_DIALOG(dialog)->vbox), main_vbox);
+	gtk_widget_show (main_vbox);
+
+	//* Add preview 
+	//gboolean tog = TRUE;
+	//GtkWidget *previewa = gimp_preview_area_new();
+	//preview = gimp_drawable_preview_new(preview_src, &tog);
+	//gtk_container_add (GTK_CONTAINER(main_vbox), preview);
+	//gtk_widget_show (preview);
+	//gimp_preview_area_set_max_size  ((GimpPreviewArea *) preview,100,100);
+	//gimp_preview_area_fill ((GimpPreviewArea *) preview,0,0,100,100,255,0,0);
+	/*g_signal_connect (preview, "invalidated",
+			G_CALLBACK(DoGREYCstoration), preview_src);
+	//*/
+
+	// Create notebook
+	notebook = gtk_notebook_new ();
+	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (notebook), GTK_POS_TOP);
+	gtk_container_add (GTK_CONTAINER (main_vbox), notebook);
+	gtk_widget_show (notebook);
+
+	// Create differents notebook pages
+	GtkWidget *page_label;
+	GtkWidget *table;
+
+	// Create the table
+	table = gtk_table_new (5, 3, FALSE);
+	gtk_table_set_col_spacings (GTK_TABLE (table), 6);
+	gtk_table_set_row_spacings (GTK_TABLE (table), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (table), 12);
+	gtk_widget_show (table);
+
+	// Insert table in a new notebook page
+	page_label = gtk_label_new ("Parameters");
+	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), table, page_label);
+	gtk_widget_show (table);
+	
+	/*
+	TABLE_SCALE(0, "_Pixel neighborhood (epsilon):", float, inpaintparam.epsilon, 1, SCALE_MAX, 0.001, 0.1, EPS_DIGITS);
+	TABLE_SCALE(1, "_Sharpness (kappa in %):", float, inpaintparam.kappa, 0, CONV_MAX, 0.001, 0.1, KAPPA_DIGITS);
+	TABLE_SCALE(2, "_Pre-smoothing (sigma):", float, inpaintparam.sigma, 0, SCALE_MAX, 0.001, 0.1, SMOOTH_DIGITS);
+	TABLE_SCALE(3, "_Post-smoothing (rho):", float, inpaintparam.rho, 0.001, SCALE_MAX, 0.001, 0.1, SMOOTH_DIGITS);
+	*/
+
+	epsilon_scale = gimp_scale_entry_new (GTK_TABLE (table), 0, 0,"_Pixel neighborhood (epsilon):", SCALE_WIDTH, 0,inpaintparam.epsilon, 1, SCALE_MAX, 0.001, 0.1, EPS_DIGITS,TRUE, 0, 0,NULL, NULL); 
+	g_signal_connect (epsilon_scale, "value_changed", 	G_CALLBACK(gimp_float_adjustment_update), &inpaintparam.epsilon);
+
+	kappa_scale = gimp_scale_entry_new (GTK_TABLE (table), 0, 1, "_Sharpness (kappa in %):", SCALE_WIDTH, 0,	inpaintparam.kappa, 0, CONV_MAX, 0.001, 0.1, KAPPA_DIGITS,TRUE, 0, 0,NULL, NULL); 
+	g_signal_connect (kappa_scale, "value_changed", 	G_CALLBACK(gimp_float_adjustment_update), &inpaintparam.kappa);
+
+	sigma_scale = gimp_scale_entry_new (GTK_TABLE (table), 0, 2, "_Pre-smoothing (sigma):", SCALE_WIDTH, 0,	inpaintparam.sigma, 0, SCALE_MAX, 0.001, 0.1, SMOOTH_DIGITS,TRUE, 0, 0,NULL, NULL); 
+	g_signal_connect (sigma_scale, "value_changed", 	G_CALLBACK(gimp_float_adjustment_update), &inpaintparam.sigma);
+
+	rho_scale = gimp_scale_entry_new (GTK_TABLE (table), 0, 3, "_Post-smoothing (rho):", SCALE_WIDTH, 0,	 inpaintparam.rho, 0.001, SCALE_MAX, 0.001, 0.1, SMOOTH_DIGITS,TRUE, 0, 0,NULL, NULL); 
+	g_signal_connect (rho_scale, "value_changed", 	G_CALLBACK(gimp_float_adjustment_update), & inpaintparam.rho);
+
+
+   // test extra button
+   GtkWidget *togglebutton = gtk_check_button_new_with_label("Inpaint Animation");
+	gtk_toggle_button_set_active( (GtkToggleButton *) togglebutton, (gboolean)anim_mode);
+	gtk_widget_show(togglebutton);
+
+	gimp_table_attach_aligned(GTK_TABLE (table),0,4,NULL,0,0,togglebutton,1,TRUE);
+	
+	g_signal_connect (togglebutton, "toggled",	G_CALLBACK(gimp_toggle_button_update), &anim_mode); 
+
+	GtkWidget *default_param_button =   gtk_button_new_with_label("Default Parameters");
+	gtk_widget_show(default_param_button);
+	gtk_table_attach((GtkTable *)table,default_param_button,0,1,4,5,GTK_EXPAND,GTK_EXPAND,0,0);
+	g_signal_connect (default_param_button, "clicked",	G_CALLBACK(set_default_param), NULL); 
+	//test end
+
+	if(channels > 1)
+	{
+		// Create the table
+		table = gtk_table_new (channels+1, 4, FALSE);
+		gtk_table_set_col_spacings (GTK_TABLE (table), 6);
+		gtk_table_set_row_spacings (GTK_TABLE (table), 6);
+		gtk_container_set_border_width (GTK_CONTAINER (table), 12);
+		gtk_widget_show (table);
+	
+		// Insert table in a new notebook page
+		page_label = gtk_label_new ("Channel Coefficients");
+		gtk_notebook_append_page (GTK_NOTEBOOK (notebook), table, page_label);
+		gtk_widget_show (table);
+		
+		globscale = g_new(GtkObject*,channels);
+		chanlabels = g_new(GtkLabel*,channels);
+		gchar slidertext[100];
+		gchar labeltext[100];
+		gint c;
+
+		for( c=0 ; c < channels ; c++)
+		{
+			sprintf(slidertext,"_Color channel %d :",c+1);
+
+			//*
+			globscale[c] = gimp_scale_entry_new (
+			GTK_TABLE (table), 0, c, slidertext, SCALE_WIDTH, 0,	dconvex[c], 0, CONV_MAX, 0, 0,0, 
+			TRUE, 0, 0,	NULL, NULL); 
+			//*/
+
+			sprintf(labeltext,"(%.2lf %%)",dconvex[c]);
+			chanlabels[c] = (GtkLabel *) gtk_label_new(labeltext);
+			gtk_widget_show ((GtkWidget*) chanlabels[c]);
+			gtk_table_attach((GtkTable *) table,(GtkWidget*) chanlabels[c],3,4,c,c+1,GTK_EXPAND,GTK_EXPAND,0,0);
+
+			g_signal_connect (globscale[c], "value_changed",	G_CALLBACK(scale_change), &dconvex[c]); 
+		}
+		
+		if(channels >= 3)
+		{
+			GtkWidget *default_coeff_button =   gtk_button_new_with_label("RGB/CMYK Default");
+			gtk_widget_show(default_coeff_button);
+			gtk_table_attach((GtkTable *)table,default_coeff_button,0,1,channels,channels+1,GTK_EXPAND,GTK_EXPAND,0,0);
+			g_signal_connect (default_coeff_button, "clicked",	G_CALLBACK(set_default_coeff), NULL); 
+		}
+	}
+
+	// Create the table
+	table = gtk_table_new (2, 3, FALSE);
+	gtk_table_set_col_spacings (GTK_TABLE (table), 6);
+	gtk_table_set_row_spacings (GTK_TABLE (table), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (table), 12);
+	gtk_widget_show (table);
+
+	// Insert table in a new notebook page
+	page_label = gtk_label_new ("Mask");
+	gtk_notebook_append_page (GTK_NOTEBOOK (notebook), table, page_label);
+	gtk_widget_show (table);
+	
+	GtkWidget* button = gtk_button_new_with_label("Save Inpainting Mask"); 
+	gtk_table_attach((GtkTable *)table,button,0,1,0,1,GTK_EXPAND,GTK_EXPAND,0,0);
+	g_signal_connect (button, "clicked",	G_CALLBACK(save_mask), NULL); 
+	gtk_widget_show (button);
+
+	button = gtk_button_new_with_label("Load Inpainting Mask"); 
+	gtk_table_attach((GtkTable *)table,button,0,1,1,2,GTK_EXPAND,GTK_EXPAND,0,0);
+	g_signal_connect (button, "clicked",	G_CALLBACK(load_mask), NULL); 
+	gtk_widget_show (button);
+
+	// Display dialog 
+	gtk_widget_show(dialog);
+	return dialog; 
+}
+
+void dialog_end(GtkWidget *dialog)
+{
+		gtk_widget_destroy(dialog);
+		g_free(globscale);
+}
+
+void scale_change(GtkAdjustment *adjustment,gpointer data)
+{
+	gint c;
+	gfloat sum;
+	gchar labeltext[100];
+ 
+	// update von dconvex
+	gimp_float_adjustment_update(adjustment,data);
+	
+	sum = 0;
+	for( c = 0 ; c < channels ; c++)
+		sum = sum + dconvex[c];
+
+	for( c = 0 ; c < channels ; c++)
+	{
+		 convex[c] = dconvex[c]/sum;
+		 sprintf(labeltext,"%.2lf %%",100*convex[c]);
+		 gtk_label_set_text(chanlabels[c],labeltext);
+	}
+}
+
+void set_default_param(void)
+{
+	inpaintparam.epsilon = EPS_DEFAULT;
+	inpaintparam.kappa = KAPPA_DEFAULT;
+	inpaintparam.sigma = SIGMA_DEFAULT;
+	inpaintparam.rho = RHO_DEFAULT;
+
+	gtk_adjustment_set_value ((GtkAdjustment *)  epsilon_scale, inpaintparam.epsilon);
+	gtk_adjustment_set_value ((GtkAdjustment *)  kappa_scale, inpaintparam.kappa);
+	gtk_adjustment_set_value ((GtkAdjustment *)  sigma_scale,inpaintparam.sigma);
+	gtk_adjustment_set_value ((GtkAdjustment *)  rho_scale, inpaintparam.rho);
+}
+
+void set_default_coeff(void)
+{
+	gint c;
+
+	dconvex[0]	=  RED_COEFF_DEFAULT;
+	dconvex[1]	=  GREEN_COEFF_DEFAULT;
+	dconvex[2]	=  BLUE_COEFF_SIGMA_DEFAULT;
+
+	for(c=0 ; c < channels ; c++)
+	{
+		if(c > 2)
+			dconvex[c] = 0;
+
+		gtk_adjustment_set_value ((GtkAdjustment *)  globscale[c], dconvex[c]);
+	}
+}
+
+void save_mask(void)
+{
+	GtkWidget *dialog;
+	gint* extrachannels;
+	gint n_extrachannels;
+	gint i,len;
+	gchar *suggestname;
+
+	extrachannels =  gimp_image_get_channels(imageID,&n_extrachannels);
+	if(n_extrachannels == 0)
+	{
+		g_message("Error: Inpainting mask is undefined");
+		return;
+	}
+
+	dialog = gtk_file_chooser_dialog_new ("Save File",
+							NULL, //parent_window,
+							GTK_FILE_CHOOSER_ACTION_SAVE,
+							GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+							GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
+							NULL);
+	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (dialog), TRUE);
+
+	len = strlen(image_name);
+	suggestname = g_new(gchar,len+6);
+	
+	for(i=0; i < len-4; i++)
+		suggestname[i] = image_name[i];
+
+	strcpy(&suggestname[i],"_mask");
+	strcpy(&suggestname[i+5],&image_name[len-4]);
+
+	gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog), suggestname);
+	g_free(suggestname);
+	
+	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
+	{
+		char *filename;
+		GimpDrawable *mask;
+
+		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
+		mask = gimp_drawable_get(extrachannels[0]);
+		gimp_file_save(GIMP_RUN_INTERACTIVE,imageID,mask->drawable_id,filename,filename);
+		gimp_drawable_detach(mask);
+		g_free (filename);
+	}
+	
+	gtk_widget_destroy (dialog);
+}
+
+void load_mask(void)
+{
+	GtkWidget *dialog;
+
+	dialog = gtk_file_chooser_dialog_new ("Open File",
+							NULL, //parent_window,
+							GTK_FILE_CHOOSER_ACTION_OPEN,
+							GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+							GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+							NULL);
+	
+	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
+	{
+		char *filename;
+		int i,j,k;
+		gint32 channelID;
+		GimpDrawable *mask;
+		gint cols,rows;
+		gint cols2,rows2;
+		guchar *mpixel;
+		GimpPixelRgn mregion;
+		GimpRGB color = {255,0,0,0};
+		gint32  loadedmaskImID;
+		gint32  loadedmaskDrawID;
+		GimpDrawable *loadedmask;
+		GimpPixelRgn loadedmregion;
+		gint loadedchans;
+		guchar *loadedmpixel;
+
+		// load mask image
+		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
+		loadedmaskImID  =  gimp_file_load(GIMP_RUN_INTERACTIVE,filename,filename);
+
+		// set color channels/ components active and get the drawable of the mask image
+		gimp_image_set_component_active (loadedmaskImID,GIMP_GRAY_CHANNEL,TRUE);
+		loadedmaskDrawID =   gimp_image_get_active_drawable  (loadedmaskImID);
+		loadedmask = gimp_drawable_get(loadedmaskDrawID);
+		loadedchans = gimp_drawable_bpp(loadedmaskDrawID);
+		
+		// add a new channel to the inpaint image (values of channel are undefined) and get the drawable of the new channel
+		cols = gimp_image_width(imageID);
+		rows = gimp_image_height (imageID);
+		channelID =  gimp_channel_new(imageID,filename,cols, rows, 0, &color);
+		gimp_image_add_channel(imageID, channelID,0);
+		mask = gimp_drawable_get(channelID);
+
+		// init channel with zeros
+		gimp_pixel_rgn_init(&mregion, mask, 0,0,cols,rows,TRUE ,TRUE);
+		mpixel = g_new(guchar, cols);
+		for(i=0 ; i < cols ; i++)
+			mpixel[i] = 0;
+		for(i = 0 ; i < rows ; i++)
+			gimp_pixel_rgn_set_row(&mregion,mpixel,0,i,cols);
+		g_free(mpixel);
+		// init end
+
+		// for the copy adopt to the size of the loaded mask if it is lower than the image size
+		cols2 = gimp_image_width(loadedmaskImID);
+		rows2 = gimp_image_height (loadedmaskImID);
+		
+		if( cols2 < cols)
+			cols = cols2;
+		if( rows2 < rows)
+			rows = rows2;
+
+		// copy the first component (red if RGB) channel of the mask image row-wise into the new channel
+		gimp_pixel_rgn_init(&mregion, mask, 0,0,cols,rows,TRUE ,TRUE);
+		gimp_pixel_rgn_init(&loadedmregion, loadedmask, 0,0,cols,rows,FALSE ,FALSE);
+
+		mpixel = g_new(guchar, cols);
+		loadedmpixel = g_new(guchar,loadedchans * cols);
+		
+		for(i = 0 ; i < rows ; i++)
+		{
+			gimp_pixel_rgn_get_row(&loadedmregion,loadedmpixel,0,i,cols);
+			
+			for(j=0,k=0 ; j < cols ; j++, k+=loadedchans)
+				mpixel[j] = loadedmpixel[k];
+
+			gimp_pixel_rgn_set_row(&mregion,mpixel,0,i,cols);
+		}
+		
+		g_free(mpixel);
+		g_free(loadedmpixel);
+		g_free (filename);
+
+		// update the channel
+		gimp_drawable_flush(mask);
+		gimp_drawable_merge_shadow(mask->drawable_id, TRUE);
+		gimp_drawable_update(mask->drawable_id,0,0,cols,rows);
+
+		// free drawables
+		gimp_drawable_detach(mask);
+		gimp_drawable_detach(loadedmask);
+		// delete loaded mask image
+		gimp_image_delete(loadedmaskImID);
+	}
+	
+	gtk_widget_destroy (dialog);
+}
+
+void updatefun(void)
+{
+	gint i,j,c;
+	gint y,k;
+	gint index;
+	
+	for( y = ymin, i=0 ; y < ymax ; y++, i++)
+	{
+		for(c = 0 ; c < channels ; c++)
+		{
+				index = ( c * rows + i) * cols;
+
+				for(j=0 , k=0 ; j < cols ; j++ , k+=channels)
+				{
+					pixel_out[k + c] = (guchar) (the_image[index + j]);
+				}
+			}
+		gimp_pixel_rgn_set_row(&region_out,pixel_out,xmin,y,cols);
+	}
+	
+	gimp_drawable_flush(drawable);
+	gimp_drawable_merge_shadow(drawable->drawable_id, TRUE);
+	gimp_drawable_update(drawable->drawable_id,xmin,ymin,cols,rows);
+		
+	gimp_displays_flush();
+}

@@ -1,0 +1,33 @@
+TODO List
+=========
+
+* Choose license, add the COPYING file
+
+* Gimp 2.8 makes significant changes to file handling (now saving
+  versus exporting).  Anyway, I think we anticipate not having saving
+  and loading of masks in the plugin anymore (or at least not saving).
+
+* Do we want this new plugin in its own git repo at some point?
+
+* Dialog is too high for my 1366x768 laptop
+
+* You have to select *something* to even get the dialog to appear.
+  (Currently, this selection determines the preview window.)  We need to make
+  sure the dialog always appears, no matter what.
+
+* Selection clips the binary mask: probably not what user expects.
+  She would want to edit the mask (in a layer) for the entire image domain
+
+* Dialog won't open if inpaint region is too big (more than 500 px wide?)
+  Related to the preview I assume.
+  Sometimes there is an error:
+
+  ** (inpaint-BCT:22855): WARNING **: fill_stop_path_buffer_from_path with path_id = -1
+*** Error in `/home/cbm/.gimp-2.8/plug-ins/inpaint-BCT': malloc(): memory corruption (fast): 0x0000000000e26ec0 ***
+*** Error in `/home/cbm/.gimp-2.8/plug-ins/inpaint-BCT': malloc(): memory corruption (fast): 0x0000000000e26e30 ***
+
+* Plugin can write to a locked image layer (!)  Sort of sounds like a gimp bug to me, but still...
+
+
+
+

@@ -1,0 +1,114 @@
+# This is the French locale definition for the GIMP Plug-In Template.
+# Copyright (C) 2001 Free Software Foundation, Inc.
+# Xavier Delatour <xdelatour@yahoo.fr>, 2001
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gimp-plugin-template 1.2.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-12-29 16:41+0100\n"
+"PO-Revision-Date: 2001-10-20 12:33+0200\n"
+"Last-Translator: Xavier Delatour <xdelatour@yahoo.fr>\n"
+"Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/interface.c:85
+msgid "GIMP Plug-In Template"
+msgstr "Modèle de greffon pour GIMP"
+
+#. gimp_scale_entry_new() examples
+#: src/interface.c:100
+msgid "ScaleEntry Examples"
+msgstr "Exemples de curseurs"
+
+#: src/interface.c:113
+msgid "Dummy 1:"
+msgstr "Exemple 1 :"
+
+#: src/interface.c:116
+msgid "Dummy scale entry 1"
+msgstr "Exemple de curseur 1"
+
+#: src/interface.c:122
+msgid "Dummy 2:"
+msgstr "Exemple 2 :"
+
+#: src/interface.c:125
+msgid "Dummy scale entry 2"
+msgstr "Exemple de curseur 2"
+
+#: src/interface.c:131
+msgid "Dummy 3:"
+msgstr "Exemple 3 :"
+
+#: src/interface.c:134
+msgid "Dummy scale entry 3"
+msgstr "Exemple de curseur 3"
+
+#. gimp_random_seed_new() example
+#: src/interface.c:141
+msgid "A Random Seed Entry"
+msgstr "Une entrée Graine du générateur de nombres aléatoires"
+
+#. gimp_coordinates_new() example
+#: src/interface.c:156
+msgid ""
+"A GimpCoordinates Widget\n"
+"Initialized with the Drawable's Size"
+msgstr ""
+"Un widget GimpCoordinates\n"
+"initialisé avec la taille de l'image"
+
+#: src/interface.c:174
+msgid "Width:"
+msgstr "Largeur :"
+
+#: src/interface.c:178
+msgid "Height:"
+msgstr "Hauteur :"
+
+#. Image and drawable menus
+#: src/interface.c:186
+msgid "Image and Drawable Menu Examples"
+msgstr "Exemples de menus Image et Calque"
+
+#: src/interface.c:205
+msgid "Layers:"
+msgstr "Calques :"
+
+#: src/interface.c:213
+msgid "RGB Images:"
+msgstr "Images RVB :"
+
+#: src/main.c:137
+#, fuzzy
+msgid "Plug-In Template..."
+msgstr "Modèle de greffon pour GIMP"
+
+#: src/render.c:49
+msgid "This plug-in is just a dummy. It has now finished doing nothing."
+msgstr ""
+
+#~ msgid "Pixmap Examples"
+#~ msgstr "Exemples d'images"
+
+#~ msgid "Pixmap Buttons:"
+#~ msgstr "Boutons avec image :"
+
+#~ msgid "With Text"
+#~ msgstr "Avec du texte"
+
+#~ msgid "Plain Pixmap:"
+#~ msgstr "Image simple :"
+
+#, fuzzy
+#~ msgid "<Image>/Filters/Misc/Plug-In Template..."
+#~ msgstr "<Image>/Filtres/Divers/Modèle de greffon..."
+
+#~ msgid "OK"
+#~ msgstr "Valider"
+
+#~ msgid "Cancel"
+#~ msgstr "Annuler"

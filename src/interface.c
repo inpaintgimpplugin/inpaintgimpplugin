@@ -206,14 +206,16 @@ gboolean dialog (
 			 gimp_standard_help_func, "plug-in-template",
 
 			 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+			 GTK_STOCK_APPLY, GTK_RESPONSE_APPLY,
 			 GTK_STOCK_OK,     GTK_RESPONSE_OK,
+
 
 			 NULL);
 
   gimp_window_set_transient (GTK_WINDOW (dlg));
 
-  GtkWidget* vbox = gtk_vbox_new (TRUE, 12);
-  gtk_container_set_border_width (GTK_CONTAINER (vbox), 12);
+  GtkWidget* vbox = gtk_vbox_new (FALSE, 10);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 10);
   gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg))),
 		  vbox, FALSE, FALSE, 0);
   gtk_widget_show (vbox);
@@ -245,7 +247,7 @@ gboolean dialog (
 
 
   /* Source and Mask selection */
-  GtkWidget* table = gtk_table_new (10, 3, FALSE);
+  GtkWidget* table = gtk_table_new (5, 3, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 6);
   gtk_table_set_row_spacings (GTK_TABLE (table), 6);
   //gtk_table_set_row_spacing (GTK_TABLE (table), 1, 12);
@@ -357,16 +359,29 @@ gboolean dialog (
   interface_vals.threshold_scale = gimp_scale_entry_new (GTK_TABLE (table), 0, 4,"_Mask Threshold:", SCALE_WIDTH, 0,vals->threshold, 0, 255, 0.001, 0.1, EPS_DIGITS,TRUE, 0, 0,NULL, NULL);
    g_signal_connect (interface_vals.threshold_scale, "value_changed", 	G_CALLBACK(dialogThresholdChanged), vals);
 
-  interface_vals.epsilon_scale = gimp_scale_entry_new (GTK_TABLE (table), 0, 5,"_Pixel neighborhood (epsilon):", SCALE_WIDTH, 0,vals->epsilon, 1, SCALE_MAX, 0.001, 0.1, EPS_DIGITS,TRUE, 0, 0,NULL, NULL);
+   GtkWidget *separator = gtk_hseparator_new ();
+   gtk_box_pack_start (GTK_BOX (vbox), separator, FALSE, FALSE, 5);
+   gtk_widget_show (separator);
+
+   table = gtk_table_new (5, 3, FALSE);
+   gtk_table_set_col_spacings (GTK_TABLE (table), 6);
+   gtk_table_set_row_spacings (GTK_TABLE (table), 6);
+   //gtk_table_set_row_spacing (GTK_TABLE (table), 1, 12);
+   //gtk_table_set_row_spacing (GTK_TABLE (table), 3, 12);
+   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
+   gtk_widget_show (table);
+
+
+  interface_vals.epsilon_scale = gimp_scale_entry_new (GTK_TABLE (table), 0, 0,"_Pixel neighborhood (epsilon):", SCALE_WIDTH, 0,vals->epsilon, 1, SCALE_MAX, 0.001, 0.1, EPS_DIGITS,TRUE, 0, 0,NULL, NULL);
   g_signal_connect (interface_vals.epsilon_scale, "value_changed", 	G_CALLBACK(gimp_float_adjustment_update), &vals->epsilon);
 
-  interface_vals.kappa_scale = gimp_scale_entry_new (GTK_TABLE (table), 0, 6, "_Sharpness (kappa in %):", SCALE_WIDTH, 0,	vals->kappa, 0, CONV_MAX, 0.001, 0.1, KAPPA_DIGITS,TRUE, 0, 0,NULL, NULL);
+  interface_vals.kappa_scale = gimp_scale_entry_new (GTK_TABLE (table), 0, 1, "_Sharpness (kappa in %):", SCALE_WIDTH, 0,	vals->kappa, 0, CONV_MAX, 0.001, 0.1, KAPPA_DIGITS,TRUE, 0, 0,NULL, NULL);
   g_signal_connect (interface_vals.kappa_scale, "value_changed", 	G_CALLBACK(gimp_float_adjustment_update), &vals->kappa);
 
-  interface_vals.sigma_scale = gimp_scale_entry_new (GTK_TABLE (table), 0, 7, "_Pre-smoothing (sigma):", SCALE_WIDTH, 0,	vals->sigma, 0, SCALE_MAX, 0.001, 0.1, SMOOTH_DIGITS,TRUE, 0, 0,NULL, NULL);
+  interface_vals.sigma_scale = gimp_scale_entry_new (GTK_TABLE (table), 0, 2, "_Pre-smoothing (sigma):", SCALE_WIDTH, 0,	vals->sigma, 0, SCALE_MAX, 0.001, 0.1, SMOOTH_DIGITS,TRUE, 0, 0,NULL, NULL);
   g_signal_connect (interface_vals.sigma_scale, "value_changed", 	G_CALLBACK(gimp_float_adjustment_update), &vals->sigma);
 
-  interface_vals.rho_scale = gimp_scale_entry_new (GTK_TABLE (table), 0, 8, "_Post-smoothing (rho):", SCALE_WIDTH, 0,	 vals->rho, 0.001, SCALE_MAX, 0.001, 0.1, SMOOTH_DIGITS,TRUE, 0, 0,NULL, NULL);
+  interface_vals.rho_scale = gimp_scale_entry_new (GTK_TABLE (table), 0, 3, "_Post-smoothing (rho):", SCALE_WIDTH, 0,	 vals->rho, 0.001, SCALE_MAX, 0.001, 0.1, SMOOTH_DIGITS,TRUE, 0, 0,NULL, NULL);
   g_signal_connect (interface_vals.rho_scale, "value_changed", 	G_CALLBACK(gimp_float_adjustment_update), &vals->rho);
 
 
@@ -381,7 +396,7 @@ gboolean dialog (
 
   GtkWidget *default_param_button =   gtk_button_new_with_label("Default Parameters");
   gtk_widget_show(default_param_button);
-  gtk_table_attach((GtkTable *)table,default_param_button,0,1,9,10,GTK_EXPAND,GTK_EXPAND,0,0);
+  gtk_table_attach((GtkTable *)table,default_param_button,0,1,4,5,GTK_EXPAND,GTK_EXPAND,0,0);
   g_signal_connect (default_param_button, "clicked",	G_CALLBACK(set_default_param), NULL);
   //test end
 
@@ -389,16 +404,18 @@ gboolean dialog (
   gtk_widget_show(dlg);
   renderPreview(vals);
 
-  gboolean run = (gimp_dialog_run (GIMP_DIALOG (dlg)) == GTK_RESPONSE_OK);
+  GtkResponseType status = gimp_dialog_run (GIMP_DIALOG (dlg));
 
-  if (run) {
-	  /*  Save ui values  */
-	  ui_vals->mask_type = interface_vals.mask_type;
+  while (status == GTK_RESPONSE_APPLY) {
+	  render (vals);
+	  gimp_displays_flush ();
+	  status = gimp_dialog_run (GIMP_DIALOG (dlg));
   }
+  ui_vals->mask_type = interface_vals.mask_type;
   destroy();
   gtk_widget_destroy (dlg);
 
-  return run;
+  return (status == GTK_RESPONSE_OK);
 }
 
 

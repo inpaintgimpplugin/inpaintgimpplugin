@@ -186,8 +186,8 @@ run (const gchar      *name,
 			gimp_get_data (DATA_KEY_UI_VALS, &ui_vals);
 			vals.image_drawable_id = gimp_image_get_active_drawable(imageID);
 
-			if (! dialog (&vals, &ui_vals))
-			{
+
+			if (!dialog (&vals, &ui_vals)) {
 				status = GIMP_PDB_CANCEL;
 			}
 			break;

@@ -19,6 +19,8 @@
 
 #include <cstdlib>
 #include <gtk/gtk.h>
+#include <libgimp/gimp.h>
+
 
 #define Inf               std::numeric_limits<double>::infinity()
 #define min(a,b)          ((a)<(b)?(a):(b))
@@ -131,6 +133,7 @@ void InpaintByOrder(Data *data)
     
 	for( k=0 ; k < stop ; k=k+3 )
 	{
+		if (k%500==0) gimp_progress_update(0.3 + 0.6*(gdouble)k/(gdouble)(stop));
         Tact = data->ordered_points[k+2];
         
         if( Tact > Told ) // update
@@ -442,13 +445,14 @@ void OrderByDistance(Data *data)
 	Heap NarrowBand(data);
     int index;
 	int i = 0;
-    int k;
+    int k,p;
 	
     InitTfieldAndHeap(data, &NarrowBand);
-    
-    
+
+    p = 0;
 	while(!NarrowBand.isempty())
 	{
+		if (p++%300==0) gimp_progress_update(0.1+0.2*(gdouble)p/(gdouble)(data->nof_points2inpaint));
 		actual = NarrowBand.extract();
         
         index = actual.j * data->rows + actual.i;

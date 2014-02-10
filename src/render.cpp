@@ -371,6 +371,8 @@ int SetImageAndMask(GimpDrawable *image, GimpDrawable *mask, Data *data) {
 
 	// write result back
 	for( int y = data->ymin, i=0 ; y < data->ymax ; y++, i++) {
+		if (i%10==0) gimp_progress_update(0.9+0.1*(gdouble)i/(gdouble)(data->ymax-data->ymin));
+
 		for(int c = 0 ; c < data->channels ; c++) {
 			for(int j=0 , k=0 ; j < data->cols ; j++ , k+=image_channels) {
 				int index = c*data->size + j*data->rows + i;
@@ -447,6 +449,7 @@ int GetImageAndMask( GimpDrawable *image, GimpDrawable *mask, Data *data)
     // make a float copy of drawable and mask
     for( y = data->ymin, i=0 ; y < data->ymax ; y++, i++)
     {
+    	if (i%10==0) gimp_progress_update(0.1*(gdouble)i/(gdouble)(data->ymax-data->ymin));
     	gimp_pixel_rgn_get_row(&region,pixel,data->xmin,y,data->cols);
     	gimp_pixel_rgn_get_row(&mregion,mpixel,data->xmin,y,data->cols);
 
@@ -889,7 +892,7 @@ render (PlugInVals *vals) {
 		return;
 	}
 
-
+	gimp_progress_init ("Inpainting...");
 	g_warning("before GetImageAndMask");
 	err = GetImageAndMask(image,mask,&data);
 	g_warning("after GetImageAndMask");
@@ -914,11 +917,10 @@ render (PlugInVals *vals) {
 	if( data.guidance == 1)
 		SetKernels(&data);
 
-	gimp_progress_init ("Inpainting");
 	g_warning("before InpaintImage");
 	InpaintImage(&data);
 	g_warning("after InpaintImage");
-	gimp_progress_init ("Inpainting done");
+	//gimp_progress_init ("Inpainting done");
 
 	if(data.inpaint_undefined == 1) {
 		g_message("\n\n");

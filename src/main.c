@@ -117,10 +117,10 @@ query (void)
 	gimp_install_procedure (PROCEDURE_NAME,
 			"Inpainting Based on Coherence Transport",
 			"Inpainting Based on Coherence Transport",
-			"Tom März <maerz@maths.ox.ac.uk>",
-			"Copyright Tom März <maerz@maths.ox.ac.uk>",
+			"Tom März <maerz@maths.ox.ac.uk> and Martin Robinson <martin.robinson@maths.ox.ac.uk>",
+			"Copyright Tom März <maerz@maths.ox.ac.uk> and Martin Robinson <martin.robinson@maths.ox.ac.uk>",
 			"2013",
-			N_("_Inpainting (new)..."),
+			N_("_Inpainting..."),
 			"RGB*, GRAY*, INDEXED*",
 			GIMP_PLUGIN,
 			G_N_ELEMENTS (args), 0,
@@ -227,6 +227,7 @@ run (const gchar      *name,
 }
 
 void print_vals(PlugInVals *vals) {
+#ifndef NDEBUG
 	g_warning("vals.image_drawable_id = %d\n"
 			   "vals.mask_drawable_id = %d\n"
 			   "vals.output_drawable_id = %d\n"
@@ -237,4 +238,5 @@ void print_vals(PlugInVals *vals) {
 			"vals.rho = %f\n", vals->image_drawable_id, vals->mask_drawable_id, vals->output_drawable_id,
 			vals->stop_path_id,
 			vals->epsilon, vals->kappa, vals->sigma, vals->rho);
+#endif
 }

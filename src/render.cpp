@@ -79,7 +79,9 @@ void FreeMem(void* p)
 
 void ErrorMessage(int type)
 {
+#ifndef NDEBUG
 	g_warning("error with id = %d",type);
+#endif
     switch( type )
     {
        	case ERR_INVALID_IMAGE_ID:
@@ -416,7 +418,9 @@ int GetImageAndMask( GimpDrawable *image, GimpDrawable *mask, Data *data)
     	data->convex[i] = 100.0/data->channels;
     }
     //g_message("epsilon %f kappa %f sigma %f rho %f delta_quant4 %f convex[0] %f channels %d",data->epsilon,data->kappa,data->sigma,data->rho,data->delta_quant4,data->convex[0], data->channels);
+#ifndef NDEBUG
     g_warning("convex = %f %f %f", data->convex[0], data->convex[1],data->convex[2]);
+#endif
 
 
 
@@ -524,21 +528,29 @@ int CalculateOrderFromPath( gint32 vectors_id, Data *data) {
 	// calculate end pixels from path
 	int i,j,num_strokes;
 	gint stroke_id;
+#ifndef NDEBUG
 	g_warning("fill_stop_path_buffer_from_path with path_id = %d",vectors_id);
+#endif
 
 	if (!gimp_vectors_is_valid(vectors_id)) {
 		return ERR_VECTORS_NOT_VALID;
 	}
 
 	stroke_id = gimp_vectors_get_strokes(vectors_id,&num_strokes)[0];
+#ifndef NDEBUG
 	g_warning("vectors has %d strokes, using stroke_id = %d",stroke_id);
+#endif
 	if (num_strokes > 0) {
 		gboolean closed;
 		gdouble  *coords;
 		gint num_coords;
+#ifndef NDEBUG
 		g_warning("going to interpolate");
+#endif
 		coords = gimp_vectors_stroke_interpolate(vectors_id,stroke_id,1.0,&num_coords,&closed);
+#ifndef NDEBUG
 		g_warning("got %d interpolation points",num_coords/2);
+#endif
 		if (coords) {
 			gint oldx,oldy;
 			for (i = 0; i < num_coords; i+=2) {
@@ -589,8 +601,9 @@ int CalculateOrderFromPath( gint32 vectors_id, Data *data) {
 	Eigen::VectorXd x(n);
 	b.setZero();
 	x.setZero();
-
+#ifndef NDEBUG
 	g_warning("init of matricies finished");
+#endif
 
 
 	// transfer Tfield to A and b
@@ -628,8 +641,9 @@ int CalculateOrderFromPath( gint32 vectors_id, Data *data) {
 	A.setFromTriplets(tripletList.begin(), tripletList.end());
 	//A.finalize();
 
-
+#ifndef NDEBUG
 	g_warning("transfer tfield finished");
+#endif
 	//solve Ax = b
 	Eigen::SimplicialLDLT<Eigen::SparseMatrix<double> > solver;
 	solver.compute(A);
@@ -641,7 +655,9 @@ int CalculateOrderFromPath( gint32 vectors_id, Data *data) {
 		// solving failed
 		return ERR_SOLVING_FAILED;
 	}
+#ifndef NDEBUG
 	g_warning("solving finished");
+#endif
 
 
 
@@ -885,7 +901,9 @@ render (PlugInVals *vals) {
 	gint mask_height = gimp_drawable_height(vals->mask_drawable_id);
 
 	if((data.xmax > mask_width)||(data.ymax > mask_height)) {
+#ifndef NDEBUG
 		g_warning("mask size = width = %d, height = %d",mask_width,mask_height);
+#endif
 		err = ERR_MASK_DIM;
 		ErrorMessage(err);
 		ClearMemory(&data);
@@ -893,9 +911,13 @@ render (PlugInVals *vals) {
 	}
 
 	gimp_progress_init ("Inpainting...");
+#ifndef NDEBUG
 	g_warning("before GetImageAndMask");
+#endif
 	err = GetImageAndMask(image,mask,&data);
+#ifndef NDEBUG
 	g_warning("after GetImageAndMask");
+#endif
 	data.ordergiven = 0;
 
 	if( err ) {
@@ -917,9 +939,13 @@ render (PlugInVals *vals) {
 	if( data.guidance == 1)
 		SetKernels(&data);
 
+#ifndef NDEBUG
 	g_warning("before InpaintImage");
+#endif
 	InpaintImage(&data);
+#ifndef NDEBUG
 	g_warning("after InpaintImage");
+#endif
 	//gimp_progress_init ("Inpainting done");
 
 	if(data.inpaint_undefined == 1) {
@@ -935,16 +961,24 @@ render (PlugInVals *vals) {
 	//CopyDirfield( &data );
 	//CopyMImage( &data );
 	//CopyTfield(&data);
+#ifndef NDEBUG
 	g_warning("before SetImageAndMask");
+#endif
 	err = SetImageAndMask(output,mask,&data);
+#ifndef NDEBUG
 	g_warning("after SetImageAndMask");
+#endif
 
 	gimp_drawable_detach(image);
 	gimp_drawable_detach(mask);
 	if (vals->output_drawable_id != vals->image_drawable_id) {
 		gimp_drawable_detach(output);
 	}
+#ifndef NDEBUG
 	g_warning("before ClearMemory");
+#endif
 	ClearMemory(&data);
+#ifndef NDEBUG
 	g_warning("after ClearMemory");
+#endif
 }

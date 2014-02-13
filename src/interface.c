@@ -116,7 +116,7 @@ void dialogMaskChangedCallback(GtkWidget *widget, PlugInVals *vals);
 void dialogStopPathChangedCallback(GtkWidget *widget, PlugInVals *vals);
 void dialogThresholdChanged(GtkWidget *widget, PlugInVals *vals);
 
-void maskTypeChangedCallback(GtkComboBoxText *widget, PlugInVals *vals);
+void maskTypeChangedCallback(GtkComboBox *widget, PlugInVals *vals);
 void set_default_param(GtkWidget *widget);
 void renderPreview(PlugInVals *vals);
 void buildPreviewSourceImage (PlugInVals *vals);
@@ -313,19 +313,19 @@ gboolean dialog (
 		  GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (label);
 
-  interface_vals.mask_type_widget = gtk_combo_box_text_new();
+  interface_vals.mask_type_widget = gtk_combo_box_new_text();
   gint num_vectors;
   gimp_image_get_vectors(interface_vals.imageID,&num_vectors);
 
-  gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(interface_vals.mask_type_widget),"Selection");
+  gtk_combo_box_append_text(GTK_COMBO_BOX(interface_vals.mask_type_widget),"Selection");
 
   if (num_vectors > 0)
-	  gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(interface_vals.mask_type_widget),"Selection With Stop Path");
+	  gtk_combo_box_append_text(GTK_COMBO_BOX(interface_vals.mask_type_widget),"Selection With Stop Path");
 
-  gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(interface_vals.mask_type_widget),"Binary Mask");
+  gtk_combo_box_append_text(GTK_COMBO_BOX(interface_vals.mask_type_widget),"Binary Mask");
   if (num_vectors > 0)
-	  gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(interface_vals.mask_type_widget),"Binary Mask With Stop Path");
-  gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(interface_vals.mask_type_widget),"Mask Including Ordering");
+	  gtk_combo_box_append_text(GTK_COMBO_BOX(interface_vals.mask_type_widget),"Binary Mask With Stop Path");
+  gtk_combo_box_append_text(GTK_COMBO_BOX(interface_vals.mask_type_widget),"Mask Including Ordering");
 
   if (interface_vals.mask_type == SELECTION) {
 	  int mt_index = 0 + (vals->stop_path_id > 0);
@@ -340,7 +340,7 @@ gboolean dialog (
 
   g_signal_connect (interface_vals.mask_type_widget, "changed",
 		  G_CALLBACK(maskTypeChangedCallback), vals);
-  maskTypeChangedCallback(interface_vals.mask_type_widget,vals);
+  maskTypeChangedCallback(GTK_COMBO_BOX(interface_vals.mask_type_widget),vals);
 
 
   gtk_table_attach (GTK_TABLE (table), interface_vals.mask_type_widget, 1, 3, 3, 4,
@@ -444,7 +444,9 @@ void dialogSourceChangedCallback(GimpIntComboBox *widget, PlugInVals *vals) {
 void dialogMaskChangedCallback(GtkWidget *widget, PlugInVals *vals) {
 	gint value;
 	g_warning("dialogMaskChangedCallback");
-	if (gtk_widget_get_sensitive(widget)) {
+
+	if (GTK_WIDGET_SENSITIVE(widget)) {
+	//if (gtk_widget_get_sensitive(widget)) {
 		if (gimp_int_combo_box_get_active(GIMP_INT_COMBO_BOX(widget),&value)) {
 			vals->mask_drawable_id = value;
 		} else {
@@ -460,7 +462,8 @@ void dialogMaskChangedCallback(GtkWidget *widget, PlugInVals *vals) {
 void dialogStopPathChangedCallback(GtkWidget *widget, PlugInVals *vals) {
 	gint value;
 	g_warning("dialogStopPathChangedCallback");
-	if (gtk_widget_get_sensitive(widget)) {
+	if (GTK_WIDGET_SENSITIVE(widget)) {
+	//if (gtk_widget_get_sensitive(widget)) {
 		if (gimp_int_combo_box_get_active(GIMP_INT_COMBO_BOX(widget),&value)) {
 			vals->stop_path_id = value;
 
@@ -483,13 +486,13 @@ void dialogThresholdChanged(GtkWidget *widget, PlugInVals *vals) {
 }
 
 
-void maskTypeChangedCallback(GtkComboBoxText *widget, PlugInVals *vals) {
+void maskTypeChangedCallback(GtkComboBox *widget, PlugInVals *vals) {
 	g_warning("maskTypeChangedCallback");
-	if (g_ascii_strncasecmp(gtk_combo_box_text_get_active_text(widget),
+	if (g_ascii_strncasecmp(gtk_combo_box_get_active_text(widget),
 							"Selection",9)==0) {
 		gtk_widget_set_sensitive(interface_vals.mask_combo_widget,FALSE);
 		interface_vals.mask_type = SELECTION;
-		if (g_ascii_strncasecmp(gtk_combo_box_text_get_active_text(widget) + 9,
+		if (g_ascii_strncasecmp(gtk_combo_box_get_active_text(widget) + 9,
 									" With Stop Path",15)==0) {
 			gtk_widget_set_sensitive(interface_vals.stop_path_combo_widget,TRUE);
 		} else {
@@ -498,10 +501,10 @@ void maskTypeChangedCallback(GtkComboBoxText *widget, PlugInVals *vals) {
 		}
 	} else {
 		gtk_widget_set_sensitive(interface_vals.mask_combo_widget,TRUE);
-		if (g_ascii_strncasecmp(gtk_combo_box_text_get_active_text(widget),
+		if (g_ascii_strncasecmp(gtk_combo_box_get_active_text(widget),
 									"Binary Mask",11)==0) {
 			interface_vals.mask_type = BINARY_MASK;
-			if (g_ascii_strncasecmp(gtk_combo_box_text_get_active_text(widget) + 11,
+			if (g_ascii_strncasecmp(gtk_combo_box_get_active_text(widget) + 11,
 					" With Stop Path",15)==0) {
 				gtk_widget_set_sensitive(interface_vals.stop_path_combo_widget,TRUE);
 			} else {

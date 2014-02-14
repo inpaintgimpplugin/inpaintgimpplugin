@@ -38,23 +38,10 @@ cd $1
 # Create a Win32 README file.
 readme_win32="README-win32.txt"
 cat >$readme_win32 2>/dev/null <<EOF
-Gimp Plug-in for "Image Registration"
-http://gimp-image-reg.sourceforge.net/
+Gimp Plug-in for "Inpainting"
 
-This is the binary distribution of '$packagename'
-for Win32. To install this package, unpack the contents of this zip
-file into your *personal* gimp-2.x directory, which is presumably
-named something like:
+TODO
 
-  c:\Documents and Settings\{user}\.gimp-2.6 (Windows 2000/XP) 
-  c:\Users\{user}\.gimp-2.6                  (Windows 7, Windows Vista)
-
-After installing the files and restarting Gimp, the plug-in will be
-available as "Image Registration..." under the menu "Tools".
-
-Please note, that currently there is no uninstaller for this package.
-Therefore, for uninstalling the package you must manually remove
-the files listed here:
 
 EOF
 

@@ -6192,7 +6192,7 @@ cat >>confdefs.h <<_ACEOF
 _ACEOF
 
 
-ALL_LINGUAS="az de fr sk sv zh_TW"
+ALL_LINGUAS=""
 
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to install the plugin in home directory" >&5

@@ -2,7 +2,7 @@
 
 bin_PROGRAMS = inpaint-BCT
 
-bindir = $(GIMP_LIBDIR)/plug-ins
+bindir = $(BINDIRREP)
 
 inpaint_BCT_SOURCES = \
 	plugin-intl.h	\

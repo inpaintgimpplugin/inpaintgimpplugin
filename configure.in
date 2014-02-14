@@ -22,6 +22,9 @@ AC_DEFINE(PLUGIN_MAJOR_VERSION, plugin_major_version, [Plug-In major version])
 AC_DEFINE(PLUGIN_MINOR_VERSION, plugin_minor_version, [Plug-In minor version])
 AC_DEFINE(PLUGIN_MICRO_VERSION, plugin_micro_version, [Plug-In micro version])
 
+dnl --------------------------------------------------------------------
+dnl Directories.
+dnl --------------------------------------------------------------------
 AC_CONFIG_SRCDIR([src/main.c])
 AM_CONFIG_HEADER(config.h)
 
@@ -50,6 +53,54 @@ if test "x$GCC" = "xyes"; then
 fi
 changequote([,])dnl
 
+dnl --------------------------------------------------------------------
+dnl Compiling for Win32.
+dnl --------------------------------------------------------------------
+case $host_os in
+  *mingw* )
+    compile_for_win32=yes
+    ;;
+  * )
+    compile_for_win32=no
+    ;;
+esac
+AM_CONDITIONAL(COMPILE_FOR_WIN32, test x$compile_for_win32 = xyes)
+
+
+dnl --------------------------------------------------------------------
+dnl Extra options when compiling for Win32.
+dnl --------------------------------------------------------------------
+if test x$compile_for_win32 = xyes; then
+
+  CFLAGS="$CFLAGS -mno-cygwin -mwindows -mms-bitfields -static-libstdc++ -static-libgcc"
+
+  # As of 2009-09-16, -lgthread-2.0 does not appear in the package
+  # configuration of the Win32 Gimp developer package (download from
+  # 'http://www.gimp.org/~tml/gimp/win32/gimp-dev-2.4.zip'). But the
+  # library itself is there. See README for compiling for Win32.
+  LIBS="$LIBS -lgthread-2.0"
+fi
+
+dnl --------------------------------------------------------------------
+dnl Point to programs/libraries installed in a non-default place. This
+dnl is necessary for cross-compiling for Win32, as the Win32 gimp
+dnl stuff has no standard location.
+dnl --------------------------------------------------------------------
+AC_ARG_WITH([prefix],
+  [AS_HELP_STRING([--with-prefix=PREFIX],
+                  [use also PREFIX as an input prefix for the build])],
+  [with_prefix=$withval],
+  [with_prefix=NONE]
+)
+
+if test x$with_prefix != xNONE; then
+    echo "Extending pkg-config path, cflags, and ldflags by dirs located in"
+    echo "$with_prefix."
+    export PKG_CONFIG_PATH="$with_prefix/lib/pkgconfig$PATH_SEPARATOR$PKG_CONFIG_PATH"
+    CFLAGS="$CFLAGS -I$with_prefix/include"
+    LDFLAGS="$LDFLAGS -L$with_prefix/lib"
+fi
+
 
 GIMP_REQUIRED_VERSION=2.2.0
 
@@ -59,11 +110,10 @@ PKG_CHECK_MODULES(GIMP,
 AC_SUBST(GIMP_CFLAGS)
 AC_SUBST(GIMP_LIBS)
 
-GIMP_LIBDIR=`$PKG_CONFIG --variable=gimplibdir gimp-2.0`
-AC_SUBST(GIMP_LIBDIR)
-
-
+dnl --------------------------------------------------------------------
 dnl i18n stuff
+dnl --------------------------------------------------------------------
+
 
 GETTEXT_PACKAGE=gimp20-plugin-template
 AC_SUBST(GETTEXT_PACKAGE)
@@ -73,17 +123,25 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE",
 dnl Add the languages which your application supports here.
 ALL_LINGUAS="az de fr sk sv zh_TW"
 
-dnl AC_PROG_INTLTOOL
-AM_GLIB_GNU_GETTEXT
+dnl --------------------------------------------------------------------
+dnl Definition of Gimp plug-in directories for user/admin installation.
+dnl See 'm4/gimp-user-install.m4' for details.
+dnl --------------------------------------------------------------------
+GIMP_PLUGIN_DIRECTORIES
 
+dnl --------------------------------------------------------------------
+dnl AC_PROG_INTLTOOL
+dnl --------------------------------------------------------------------
+AM_GLIB_GNU_GETTEXT
 AC_CHECK_FUNCS(bind_textdomain_codeset)
 
-LOCALEDIR='${datadir}/locale'
-DATADIR='${datadir}/plugin_name'
+LOCALEDIR='${GIMP_PLUGIN_LOCALEDIR}'
+DATADIR='${GIMP_PLUGIN_DATADIR}/plugin_name'
+BINDIRREP='${GIMP_PLUGIN_BINDIR}'
 
 AC_SUBST(LOCALEDIR)
 AC_SUBST(DATADIR)
-
+AC_SUBST(BINDIRREP)
 
 AC_MSG_CHECKING([if GTK+ is version 2.7.0 or newer])
 if $PKG_CONFIG --atleast-version=2.7.0 gtk+-2.0; then
@@ -122,3 +180,19 @@ help/images/Makefile
 ])
 
 AC_OUTPUT
+
+dnl --------------------------------------------------------------------
+dnl Summary.
+dnl --------------------------------------------------------------------
+
+EVAL_localedir=`eval echo ${LOCALEDIR}`
+EVAL_datadir=`eval echo ${DATADIR}`
+EVAL_bindir=`eval echo ${BINDIRREP}`
+
+AC_MSG_NOTICE([])
+AC_MSG_NOTICE([====================== summary =====================])
+AC_MSG_NOTICE([prefix:     ${prefix}])
+AC_MSG_NOTICE([locale-dir: ${EVAL_localedir}])
+AC_MSG_NOTICE([data-dir:   ${EVAL_datadir}])
+AC_MSG_NOTICE([bin-dir:    ${EVAL_bindir}])
+

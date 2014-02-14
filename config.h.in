@@ -81,5 +81,14 @@
 /* Plug-In version */
 #undef PLUGIN_VERSION
 
+/* Data and locale dirs are relative to plug-in executable */
+#undef RELATIVE_DIRS
+
+/* Directory name for "locale" */
+#undef RELATIVE_DIR_LOCALE
+
+/* Directory name for "share" */
+#undef RELATIVE_DIR_SHARE
+
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS

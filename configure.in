@@ -3,7 +3,7 @@ dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.54)
 
 dnl Name your plug-in here
-m4_define([plugin_name], [inpaint-BCT])
+m4_define([plugin_name], [gimp-inpaint-BCT])
 
 dnl These three define the plug-in version number
 m4_define([plugin_major_version], [0])
@@ -115,7 +115,7 @@ dnl i18n stuff
 dnl --------------------------------------------------------------------
 
 
-GETTEXT_PACKAGE=gimp20-plugin-template
+GETTEXT_PACKAGE=gimp-inpaint-BCT
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE",
 				    [The gettext translation domain.])

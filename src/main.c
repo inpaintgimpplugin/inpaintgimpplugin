@@ -31,12 +31,12 @@
 
 /*  Constants  */
 
-#define PROCEDURE_NAME   "plug_in_inpaint"
+#define PROCEDURE_NAME   "gimp_inpaint_BCT"
 
-#define DATA_KEY_VALS    "plug_in_inpaint"
-#define DATA_KEY_UI_VALS "plug_in_inpaint_ui"
+#define DATA_KEY_VALS    "gimp_inpaint_BCT"
+#define DATA_KEY_UI_VALS "gimp_inpaint_BCT_ui"
 
-#define PARASITE_KEY     "plug_in_inpaint_options"
+#define PARASITE_KEY     "gimp_inpaint_BCT_options"
 
 
 /*  Local function prototypes  */

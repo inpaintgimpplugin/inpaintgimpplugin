@@ -1,10 +1,10 @@
 ## Process this file with automake to produce Makefile.in
 
-bin_PROGRAMS = inpaint-BCT
+bin_PROGRAMS = gimp-inpaint-BCT
 
 bindir = $(BINDIRREP)
 
-inpaint_BCT_SOURCES = \
+gimp_inpaint_BCT_SOURCES = \
 	plugin-intl.h	\
 	interface.c	\
 	interface.h	\

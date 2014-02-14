@@ -32,7 +32,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = inpaint-BCT$(EXEEXT)
+bin_PROGRAMS = gimp-inpaint-BCT$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -46,12 +46,12 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_inpaint_BCT_OBJECTS = interface.$(OBJEXT) main.$(OBJEXT) \
+am_gimp_inpaint_BCT_OBJECTS = interface.$(OBJEXT) main.$(OBJEXT) \
 	render.$(OBJEXT) inpainting_func.$(OBJEXT) Heap.$(OBJEXT)
-inpaint_BCT_OBJECTS = $(am_inpaint_BCT_OBJECTS)
-inpaint_BCT_LDADD = $(LDADD)
+gimp_inpaint_BCT_OBJECTS = $(am_gimp_inpaint_BCT_OBJECTS)
+gimp_inpaint_BCT_LDADD = $(LDADD)
 am__DEPENDENCIES_1 =
-inpaint_BCT_DEPENDENCIES = $(am__DEPENDENCIES_1)
+gimp_inpaint_BCT_DEPENDENCIES = $(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -65,8 +65,8 @@ CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
-SOURCES = $(inpaint_BCT_SOURCES)
-DIST_SOURCES = $(inpaint_BCT_SOURCES)
+SOURCES = $(gimp_inpaint_BCT_SOURCES)
+DIST_SOURCES = $(gimp_inpaint_BCT_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -191,7 +191,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-inpaint_BCT_SOURCES = \
+gimp_inpaint_BCT_SOURCES = \
 	plugin-intl.h	\
 	interface.c	\
 	interface.h	\
@@ -285,9 +285,9 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
-inpaint-BCT$(EXEEXT): $(inpaint_BCT_OBJECTS) $(inpaint_BCT_DEPENDENCIES) $(EXTRA_inpaint_BCT_DEPENDENCIES) 
-	@rm -f inpaint-BCT$(EXEEXT)
-	$(CXXLINK) $(inpaint_BCT_OBJECTS) $(inpaint_BCT_LDADD) $(LIBS)
+gimp-inpaint-BCT$(EXEEXT): $(gimp_inpaint_BCT_OBJECTS) $(gimp_inpaint_BCT_DEPENDENCIES) $(EXTRA_gimp_inpaint_BCT_DEPENDENCIES) 
+	@rm -f gimp-inpaint-BCT$(EXEEXT)
+	$(CXXLINK) $(gimp_inpaint_BCT_OBJECTS) $(gimp_inpaint_BCT_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)

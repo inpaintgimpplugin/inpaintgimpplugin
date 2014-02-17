@@ -25,7 +25,7 @@
               <a class="zip_download_link" href="https://github.com/martinjrobins/inpaintGimpPlugin/zipball/master">Download project source as a .zip file</a>
               <a class="tar_download_link" href="https://github.com/martinjrobins/inpaintGimpPlugin/tarball/master">Download project source as a tar.gz file</a>
               <a class="win32_download_link" href="https://github.com/martinjrobins/inpaintGimpPlugin/raw/master/gimp-inpaint-BCT-0.2.0-win32.zip">Download Win32 binaries as a .zip file</a>
-              <a class="mac_download_link" href="https://github.com/martinjrobins/inpaintGimpPlugin/raw/master/gimp-inpaint-BCT-0.2.0-win32.zip">Download Mac OSX binaries as a .zip file</a>              
+              <a class="mac_download_link">Download Mac OS X binaries as a .zip file</a>              
                             
             </section>
         </header>
@@ -40,31 +40,31 @@
 <p>This is a plug-in for the popular open-source image processing software <a href=http://www.gimp.org>GIMP</a>. Inpainting refers to the process of removing or recovering image regions by "inpainting" the surrounding image features into the region to be recovered. </p>
 
 <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Pre-compiled Downloads</h3>
+<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Pre-compiled Binaries</h3>
 <h5>Windows</h5>
-You can grab a pre-compiled Windows distribution from <a>here</a>. This comes as a zip file which should be extracted into your GIMP user directory. For user "username" with GIMP version 2.6, this is the folder located at: <code>C:\Users\username\.gimp-2.6\</code>
-<h5>Mac OSX</h5>
-TODO
+<p>You can grab a pre-compiled Windows distribution from <a>here</a>. This comes as a zip file which should be extracted into your GIMP user directory. For user "username" with GIMP version 2.6, this is the folder located at: <code>C:\Users\username\.gimp-2.6\</code>
+<h5>Mac OS X</h5>
+<p>Mac OS X pre-compiled package is coming. In the meantime, please compile from source using the instructions below.
 <h3>
 
 <a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Compile from Source</h3>
 
-Either get the source by downloading one of the two source downloads at the top of this page, or by cloning the git repository like so:
+<p>Either get the source by downloading one of the two source downloads at the top of this page, or by cloning the git repository like so:
 <pre><code>$ git clone https://github.com/martinjrobins/inpaintGimpPlugin.git
 </code></pre>
 
-Then change to the source root directory and configure and compile like so:
+<p>Then change to the source root directory and configure and compile:</p>
 <pre><code>$ ./configure
 $ make
 $ make install
 </code></pre>
-To install the plugin to your user directory (does not require root access):
+<p>To install the plugin to your user directory (does not require root access):
 <pre><code>$ ./configure --enable-user-directory
 $ make
 $ make install
 </code></pre>
 
-For more options and more detailed instructions, please refer to the package README
+<p>For more options and more detailed instructions, please refer to the package README
 
 <h3>
 <a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>

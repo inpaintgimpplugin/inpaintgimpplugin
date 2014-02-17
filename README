@@ -2,23 +2,19 @@ GIMP InPainting Plug-In
 =====================
 Copyright (C) 2013 Thomas März (maerz@maths.ox.ac.uk) & Martin Robinson (martin.robinson@maths.ox.ac.uk)
 
-To build the plug-in...
+To build the plug-in and install for all users
 
-	cd inpaintGimpPlugin	
 	./configure
 	make
-
-if you want to install for all users...
-
 	sudo make install
 
-or if you want to just install for current user...
+if you want to install in the local user directory
 
-	cp src/inpaint-BCT $HOME/.gimp-2.6/plug-ins
+	./configure --enable-user-install
+	make
+	make install
 
-(or .gimp-2.8, etc)
-
- ... and it's there.
+Then fire up GIMP and the plug-in will be located under Filters->Misc->Inpainting...
  
 	
 Batch scripting

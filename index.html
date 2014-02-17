@@ -18,12 +18,15 @@
         <header class="inner">
           <a id="forkme_banner" href="https://github.com/martinjrobins/inpaintGimpPlugin">View on GitHub</a>
 
-          <h1 id="project_title">Inpaintgimpplugin</h1>
-          <h2 id="project_tagline">Inpainting Gimp Plugin</h2>
+          <h1 id="project_title">Inpainting Gimp Plug-in</h1>
+          <h2 id="project_tagline">Recover or remove image regions by inpainting surrounding features</h2>
 
             <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/martinjrobins/inpaintGimpPlugin/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/martinjrobins/inpaintGimpPlugin/tarball/master">Download this project as a tar.gz file</a>
+              <a class="zip_download_link" href="https://github.com/martinjrobins/inpaintGimpPlugin/zipball/master">Download project source as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/martinjrobins/inpaintGimpPlugin/tarball/master">Download project source as a tar.gz file</a>
+              <a class="win32_download_link" href="https://github.com/martinjrobins/inpaintGimpPlugin/raw/master/gimp-inpaint-BCT-0.2.0-win32.zip">Download Win32 binaries as a .zip file</a>
+              <a class="mac_download_link" href="https://github.com/martinjrobins/inpaintGimpPlugin/raw/master/gimp-inpaint-BCT-0.2.0-win32.zip">Download Mac OSX binaries as a .zip file</a>              
+                            
             </section>
         </header>
     </div>
@@ -32,37 +35,44 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>What it is</h3>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p>This is a plug-in for the popular open-source image processing software <a href=http://www.gimp.org>GIMP</a>. Inpainting refers to the process of removing or recovering image regions by "inpainting" the surrounding image features into the region to be recovered. </p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+<h3>
+<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Pre-compiled Downloads</h3>
+<h5>Windows</h5>
+You can grab a pre-compiled Windows distribution from <a>here</a>. This comes as a zip file which should be extracted into your GIMP user directory. For user "username" with GIMP version 2.6, this is the folder located at: <code>C:\Users\username\.gimp-2.6\</code>
+<h5>Mac OSX</h5>
+TODO
+<h3>
+
+<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Compile from Source</h3>
+
+Either get the source by downloading one of the two source downloads at the top of this page, or by cloning the git repository like so:
+<pre><code>$ git clone https://github.com/martinjrobins/inpaintGimpPlugin.git
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+Then change to the source root directory and configure and compile like so:
+<pre><code>$ ./configure
+$ make
+$ make install
+</code></pre>
+To install the plugin to your user directory (does not require root access):
+<pre><code>$ ./configure --enable-user-directory
+$ make
+$ make install
+</code></pre>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
-
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
-
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+For more options and more detailed instructions, please refer to the package README
 
 <h3>
 <a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<p>Plug-in based on original code and research performed by Thomas März (<a href="https://github.com/maerztom" class="user-mention">@maerztom</a> or <a>maerz@maths.ox.ac.uk</a>)</p>
+<p>GIMP Plug-in written by Martin Robinson (<a href="https://github.com/martinjrobins" class="user-mention">@martinjrobins</a> or <a>martin.robinson@maths.ox.ac.uk</a>)</p>
 
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
+</section>
     </div>
 
     <!-- FOOTER  -->

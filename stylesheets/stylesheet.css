@@ -303,6 +303,7 @@ Full-Width Styles
   font-size: 42px;
   font-weight: 700;
   text-shadow: #111 0px 0px 10px;
+  text-decoration: none;
 }
 
 #project_tagline {
@@ -322,6 +323,12 @@ Full-Width Styles
   height: 70px;
   background: url('../images/icon_download.png') no-repeat 0% 90%;
 }
+
+.example_table {
+  border: hidden;
+  valign: middle;
+  padding: 0px;
+ }
 
 .zip_download_link {
   display: block;

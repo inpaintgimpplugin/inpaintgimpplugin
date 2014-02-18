@@ -329,6 +329,12 @@ Full-Width Styles
   valign: middle;
   padding: 0px;
  }
+ 
+ .reference {
+  display:block;
+  color: inherit;
+  margin-bottom: 10px;
+ }
 
 .zip_download_link {
   display: block;

@@ -153,7 +153,7 @@ gboolean dialog (
   interface_vals.image_drawable = NULL;
   interface_vals.mask_drawable = NULL;
   if (vals->image_drawable_id >= 0) {
-#ifndef NDEBUG
+#ifdef DEBUG
 	  g_warning("There is an input image drawable id");
 #endif
 	  interface_vals.image_drawable = gimp_drawable_get(vals->image_drawable_id);
@@ -196,7 +196,7 @@ gboolean dialog (
   //interface_vals.mask_drawable = gimp_drawable_get(vals->mask_drawable_id);
 
 
-#ifndef NDEBUG
+#ifdef DEBUG
   g_warning("image dims: x0,x1,y0,y1 = %d,%d,%d,%d",interface_vals.selectionX0,interface_vals.selectionX1,interface_vals.selectionY0,interface_vals.selectionY1);
 #endif
   gchar text[100];
@@ -265,7 +265,7 @@ gboolean dialog (
   gtk_widget_show (label);
 
   GtkWidget* combo = gimp_drawable_combo_box_new (NULL, NULL);
-#ifndef NDEBUG
+#ifdef DEBUG
   g_warning("setting initi value of source combo box as %d",vals->image_drawable_id);
 #endif
   gimp_int_combo_box_connect (GIMP_INT_COMBO_BOX (combo), vals->image_drawable_id,
@@ -435,7 +435,7 @@ dialog_image_constraint_func (gint32    image_id,
 
 void dialogSourceChangedCallback(GimpIntComboBox *widget, PlugInVals *vals) {
 	gint value;
-#ifndef NDEBUG
+#ifdef DEBUG
 	g_warning("dialogSourceChangedCallback");
 #endif
 
@@ -450,7 +450,7 @@ void dialogSourceChangedCallback(GimpIntComboBox *widget, PlugInVals *vals) {
 }
 void dialogMaskChangedCallback(GtkWidget *widget, PlugInVals *vals) {
 	gint value;
-#ifndef NDEBUG
+#ifdef DEBUG
 	g_warning("dialogMaskChangedCallback");
 #endif
 
@@ -470,7 +470,7 @@ void dialogMaskChangedCallback(GtkWidget *widget, PlugInVals *vals) {
 }
 void dialogStopPathChangedCallback(GtkWidget *widget, PlugInVals *vals) {
 	gint value;
-#ifndef NDEBUG
+#ifdef DEBUG
 	g_warning("dialogStopPathChangedCallback");
 #endif
 	if (GTK_WIDGET_SENSITIVE(widget)) {
@@ -490,11 +490,11 @@ void dialogStopPathChangedCallback(GtkWidget *widget, PlugInVals *vals) {
 
 
 void dialogThresholdChanged(GtkWidget *widget, PlugInVals *vals) {
-#ifndef NDEBUG
+#ifdef DEBUG
 	g_warning("old threshold = %d",vals->threshold);
 #endif
 	vals->threshold = gtk_adjustment_get_value(GTK_ADJUSTMENT(widget));
-#ifndef NDEBUG
+#ifdef DEBUG
 	g_warning("new threshold = %d",vals->threshold);
 #endif
 	renderPreview(vals);
@@ -502,7 +502,7 @@ void dialogThresholdChanged(GtkWidget *widget, PlugInVals *vals) {
 
 
 void maskTypeChangedCallback(GtkComboBox *widget, PlugInVals *vals) {
-#ifndef NDEBUG
+#ifdef DEBUG
 	g_warning("maskTypeChangedCallback");
 #endif
 	if (g_ascii_strncasecmp(gtk_combo_box_get_active_text(widget),
@@ -554,7 +554,7 @@ void renderPreview(PlugInVals *vals) {
 	guchar *maskRow;
 	guchar *stopRow;
 	guchar *resultRGBA;
-#ifndef NDEBUG
+#ifdef DEBUG
 	g_warning("renderPreview");
 #endif
 
@@ -605,7 +605,7 @@ void renderPreview(PlugInVals *vals) {
 }
 
 void buildPreviewSourceImage (PlugInVals *vals) {
-#ifndef NDEBUG
+#ifdef DEBUG
 	g_warning("buildPreviewSourceImage");
 #endif
 
@@ -684,7 +684,7 @@ void set_defaults(PlugInUIVals       *ui_vals) {
 }
 
 void update_mask(PlugInVals *vals) {
-#ifndef NDEBUG
+#ifdef DEBUG
 	g_warning("update_mask to id = %d",vals->mask_drawable_id);
 #endif
 	if (interface_vals.mask_drawable != NULL) gimp_drawable_detach(interface_vals.mask_drawable);
@@ -700,14 +700,14 @@ void update_mask(PlugInVals *vals) {
 }
 
 void update_stop_path(PlugInVals *vals) {
-#ifndef NDEBUG
+#ifdef DEBUG
 	g_warning("update_path to id = %d",vals->stop_path_id);
 #endif
 	fill_stop_path_buffer_from_path(vals->stop_path_id);
 }
 
 void update_image(PlugInVals *vals) {
-#ifndef NDEBUG
+#ifdef DEBUG
 	g_warning("update_image to id = %d",vals->image_drawable_id);
 #endif
 
@@ -726,13 +726,13 @@ void update_image(PlugInVals *vals) {
 void fill_stop_path_buffer_from_path(gint32 path_id) {
 	int i,j,num_strokes;
 	gint stroke_id;
-#ifndef NDEBUG
+#ifdef DEBUG
 	g_warning("fill_stop_path_buffer_from_path with path_id = %d, previewWidth  = %d, height = %d",path_id,
 			interface_vals.previewWidth,interface_vals.previewHeight );
 #endif
 	for (i = 0; i < interface_vals.previewWidth * interface_vals.previewHeight; i++)
 			interface_vals.previewStopPath[i] = 0;
-#ifndef NDEBUG
+#ifdef DEBUG
 	g_warning("fill_stop_path_buffer_from_path init finish",path_id);
 #endif
 
@@ -742,18 +742,18 @@ void fill_stop_path_buffer_from_path(gint32 path_id) {
 	}
 
 	stroke_id = gimp_vectors_get_strokes(path_id,&num_strokes)[0];
-#ifndef NDEBUG
+#ifdef DEBUG
 	g_warning("vectors has %d strokes, using stroke_id = %d",stroke_id);
 #endif
 	if (num_strokes > 0) {
 		gboolean closed;
 		gdouble   *coords;
 		gint num_coords;
-#ifndef NDEBUG
+#ifdef DEBUG
 		g_warning("going to interpolate");
 #endif
 		coords = gimp_vectors_stroke_interpolate(path_id,stroke_id,1.0,&num_coords,&closed);
-#ifndef NDEBUG
+#ifdef DEBUG
 		g_warning("got %d interpolation points",num_coords/2);
 #endif
 		if (coords) {
@@ -761,7 +761,7 @@ void fill_stop_path_buffer_from_path(gint32 path_id) {
 			for (i = 0; i < num_coords; i+=2) {
 				gint x = coords[i] - interface_vals.selectionX0;
 				gint y = coords[i+1] - interface_vals.selectionY0;
-#ifndef NDEBUG
+#ifdef DEBUG
 				g_warning("%d: putting in point x,y = %d,%d",i/2,x,y);
 #endif
 
@@ -786,7 +786,7 @@ void fill_stop_path_buffer_from_path(gint32 path_id) {
 			g_free(coords);
 		}
 	}
-#ifndef NDEBUG
+#ifdef DEBUG
 	g_warning("fill_stop_path_buffer_from_path finished");
 #endif
 

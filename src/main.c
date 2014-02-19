@@ -227,7 +227,7 @@ run (const gchar      *name,
 }
 
 void print_vals(PlugInVals *vals) {
-#ifndef NDEBUG
+#ifdef DEBUG
 	g_warning("vals.image_drawable_id = %d\n"
 			   "vals.mask_drawable_id = %d\n"
 			   "vals.output_drawable_id = %d\n"

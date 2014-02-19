@@ -62,7 +62,7 @@ GIMP_PLUGIN_LOCALEDIR=`echo ${GIMP_PLUGIN_LOCALEDIR} | sed -e ${SED_SCRIPT}`
 if test x$USER_INSTALL = xyes ; then
 
   # "/home/username/.gimp-2.6"
-  GIMP_PREFIX=`dirname ${GIMP_PLUGIN_BINDIR}`
+  GIMP_PREFIX="$( dirname "$GIMP_PLUGIN_BINDIR" )"
   QUOTED_GIMP_PREFIX=`echo ${GIMP_PREFIX} | sed -e 's/\\//\\\\\\//g'`
   SED_SCRIPT="s/${QUOTED_GIMP_PREFIX}/\${prefix}/"
 

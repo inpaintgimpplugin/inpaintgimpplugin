@@ -67,8 +67,8 @@ if test x$USER_INSTALL = xyes ; then
   SED_SCRIPT="s/${QUOTED_GIMP_PREFIX}/\${prefix}/"
 
   # "${prefix}/plug-ins"
-  GIMP_PLUGIN_BINDIR=`echo ${GIMP_PLUGIN_BINDIR} | sed -e ${SED_SCRIPT}`
-
+  #GIMP_PLUGIN_BINDIR=`echo ${GIMP_PLUGIN_BINDIR} | sed -e ${SED_SCRIPT}`
+  GIMP_PLUGIN_BINDIR="\${prefix}/$( basename "$GIMP_PLUGIN_BINDIR" )"
   if test x$XXX_WITH_USER_INSTALL_DIR = xyes; then
     if test x$with_user_install_dir = x; then
       # "/home/username/.gimp-2.6"

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Inpaintgimpplugin : Inpainting Gimp Plugin" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Inpaintgimpplugin</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/martinjrobins/inpaintGimpPlugin">View on GitHub</a>
+
+          <a id="project_title" href="index.html">Gimp Inpainting Plug-in</a>
+          <h2 id="project_tagline">Recover or remove image regions by inpainting surrounding features</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/martinjrobins/inpaintGimpPlugin/zipball/master">Download project source as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/martinjrobins/inpaintGimpPlugin/tarball/master">Download project source as a tar.gz file</a>
+              <a class="win32_download_link" href="https://github.com/martinjrobins/inpaintGimpPlugin/raw/master/gimp-inpaint-BCT-0.2.0-win32.zip">Download Win32 binaries as a .zip file</a>
+              <a class="mac_download_link">Download Mac OS X binaries as a .zip file</a>              
+                            
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h3>
+<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Pumpkin Example</h3>
+<p>Open the <code>examples/pumpkin.png</code> image from the repository</p>
+<img alt="" src="images/pumpkin/start.jpg">
+<p>Draw a selection region around the pumpkin, using the <code>Free Select Tool</code>. Then use the <code>Paths Tool</code> to draw a straight segment from the centre of the pumpkin down to where the bottom window sill begins.</p>
+<img alt="" src="images/pumpkin/selection.jpg">
+<p>Run the plug-in in <code>Filters/Misc/Inpainting...</code>. Choose <code>Selection With Stop Path</code> for the mask type, and the path you just drew for the stop path. This will use the current selection for the inpainting region, the inpainting will proceed from this outer boundary inwards until it reaches the specified stop path</p>
+<p>Use the following parameters:</p>
+<img alt="" src="images/pumpkin/filter_window.jpg">
+<p>And hit <code>OK</code>. The result should look like this...</p>
+<img alt="" src="images/pumpkin/finish_with_selection.jpg">
+
+</section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Inpaintgimpplugin maintained by <a href="https://github.com/martinjrobins">martinjrobins</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-48149829-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+
+  </body>
+</html>

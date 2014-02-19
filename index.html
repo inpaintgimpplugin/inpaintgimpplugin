@@ -18,7 +18,7 @@
         <header class="inner">
           <a id="forkme_banner" href="https://github.com/martinjrobins/inpaintGimpPlugin">View on GitHub</a>
 
-          <h1 id="project_title">Inpainting Gimp Plug-in</h1>
+          <a id="project_title" href="index.html">Gimp Inpainting Plug-in</a>
           <h2 id="project_tagline">Recover or remove image regions by inpainting surrounding features</h2>
 
             <section id="downloads">
@@ -35,19 +35,33 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>What it is</h3>
+<a name="whatisit" class="anchor" href="#whatisit"><span class="octicon octicon-link"></span></a>What is it</h3>
 
 <p>This is a plug-in for the popular open-source image processing software <a href=http://www.gimp.org>GIMP</a>. Inpainting refers to the process of removing or recovering image regions by "inpainting" the surrounding image features into the region to be recovered. </p>
-
 <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Pre-compiled Binaries</h3>
+<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h3>
+<p>Click on the example to see detailed instructions on how to use the plug-in.</p>
+<table class="example_table">
+<tr>
+	<td class="example_table"><a href="example_new_orleans.html"><img alt="" src="images/new_orleans/start_small.jpg"></a></td>
+	<td class="example_table"><a href="example_new_orleans.html"><img alt="" src="images/arrow.svg"></a></td>
+	<td class="example_table"><a href="example_new_orleans.html"><img alt="" src="images/new_orleans/finish_small.jpg"></a></td>
+</tr>
+<tr>
+	<td class="example_table"><a href="example_pumpkin.html"><img alt="" src="images/pumpkin/start_small.jpg"></a></td>
+	<td class="example_table"><a href="example_pumpkin.html"><img alt="" src="images/arrow.svg"></a></td>
+	<td class="example_table"><a href="example_pumpkin.html"><img alt="" src="images/pumpkin/finish_small.jpg"></a></td>
+</tr>
+</table>
+<h3>
+<a name="precompiled" class="anchor" href="#precompiled"><span class="octicon octicon-link"></span></a>Pre-compiled Binaries</h3>
 <h5>Windows</h5>
 <p>You can grab a pre-compiled Windows distribution from <a href="https://github.com/martinjrobins/inpaintGimpPlugin/raw/master/gimp-inpaint-BCT-0.2.0-win32.zip">here</a>. This comes as a zip file which should be extracted into your GIMP user directory. For example, <code>C:\Users\username\.gimp-2.8\</code> would be the correct directory for user "username" and GIMP version 2.8.
 <h5>Mac OS X</h5>
 <p>You can grab a pre-compiled Mac OS X distribution from <a href="https://github.com/martinjrobins/inpaintGimpPlugin/raw/master/gimp-inpaint-BCT-0.2.0-macosx-10.6.zip">here</a>. This comes as a zip file which should be extracted into your GIMP user directory. For example, <code>/Users/username/Library/Application Support/GIMP/2.8/</code>.</p>
 <h3>
 
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Compile from Source</h3>
+<a name="compile" class="anchor" href="#compile"><span class="octicon octicon-link"></span></a>Compile from Source</h3>
 
 <p>Either get the source by downloading one of the two source downloads at the top of this page, or by cloning the git repository like so:
 <pre><code>$ git clone https://github.com/martinjrobins/inpaintGimpPlugin.git
@@ -70,8 +84,14 @@ $ make install
 <a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
 
 <p>Plug-in based on original code and research performed by Thomas März (<a href="https://github.com/maerztom" class="user-mention">@maerztom</a> or <a>maerz@maths.ox.ac.uk</a>)</p>
+
 <p>GIMP Plug-in written by Martin Robinson (<a href="https://github.com/martinjrobins" class="user-mention">@martinjrobins</a> or <a>martin.robinson@maths.ox.ac.uk</a>)</p>
 
+<h3>
+<a name="references" class="anchor" href="#references"><span class="octicon octicon-link"></span></a>References</h3>
+
+<a class="reference" href="http://link.springer.com/article/10.1007/s10851-007-0017-6">Bornemann, F., & März, T. (2007). Fast image inpainting based on coherence transport. Journal of Mathematical Imaging and Vision, 28(3), 259-278.</a>
+<a class="reference" href="http://epubs.siam.org/doi/abs/10.1137/100807296">März, T. (2011). Image inpainting based on coherence transport with adapted distance functions. SIAM Journal on Imaging Sciences, 4(4), 981-1000.</a>
 </section>
     </div>
 

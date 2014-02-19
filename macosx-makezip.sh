@@ -60,7 +60,7 @@ package_readme=$here/$dirname/README
 cp $package_readme $readme
 
 # Append a file listing to Mac OS X readme.
-tree --charset ascii -n >> $readme_macos
+#tree --charset ascii -n >> $readme_macos
 
 # Now put everything into the zip archive.
 rm -f $here/$zipname

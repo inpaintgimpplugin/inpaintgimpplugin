@@ -48,21 +48,9 @@ zipname=$packagename"-macosx-"$version".zip"
 # Create a Mac OS README file.
 readme_macos="README-macosx-"$version".txt"
 cat >$readme_macos 2>/dev/null <<EOF
-Gimp Plug-in for "Image Registration"
-http://gimp-image-reg.sourceforge.net/
+Gimp Plug-in for "Inpainting"
 
-This is the binary distribution of '$packagename'
-for Mac OS X $version. To install this package, unpack the contents of
-this zip file into your *personal* gimp-2.x directory named:
-
-  ~/Library/Application\ Support/Gimp
-
-After installing the files and restarting Gimp, the plug-in will be
-available as "Image Registration..." under the menu "Tools".
-
-Please note, that currently there is no uninstaller for this package.
-Therefore, for uninstalling the package you must manually remove
-the files listed here:
+TODO
 
 EOF
 

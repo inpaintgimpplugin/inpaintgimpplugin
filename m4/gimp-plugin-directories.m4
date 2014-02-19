@@ -35,7 +35,7 @@ fi
 GIMPTOOL_OUTPUT=`$GIMPTOOL -n --$INSTALL_OPT dummy`
 
 # "/home/username/.gimp-2.6/plug-ins" or "/usr/lib/gimp/2.0/plug-ins"
-GIMP_PLUGIN_BINDIR=`echo "${GIMPTOOL_OUTPUT}" | cut -f 3 -d ' '`
+GIMP_PLUGIN_BINDIR=`echo "${GIMPTOOL_OUTPUT}" | cut -f 3-4 -d ' '`
 
 # "/usr"
 GIMP_PREFIX=`${PKG_CONFIG} --variable=prefix gimp-2.0`

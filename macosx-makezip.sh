@@ -50,7 +50,11 @@ readme_macos="README-macosx-"$version".txt"
 cat >$readme_macos 2>/dev/null <<EOF
 Gimp Plug-in for "Inpainting"
 
-TODO
+This zip file contains a pre-compiled binary of the inpainting Gimp Plug-in 
+(http://martinjrobins.github.io/inpaintGimpPlugin/). This comes as a zip file 
+which should be extracted into your GIMP user directory.
+For example, /Users/username/Library/Application Support/GIMP/2.8/ would be the 
+correct directory for user "username" and GIMP version 2.8.
 
 EOF
 

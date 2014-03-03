@@ -29,7 +29,7 @@ packagename=`\
     cut -f 1,3 -d " " --output-delimiter="-"`
 
 # Append '-win32.zip' to package name to get the name of zip package.
-zipname=$packagename"-win32.zip"
+zipname=$packagename"-$2.zip"
 
 # Remember where we are and step into the win32 directory.
 here=`pwd`
@@ -40,7 +40,11 @@ readme_win32="README-win32.txt"
 cat >$readme_win32 2>/dev/null <<EOF
 Gimp Plug-in for "Inpainting"
 
-TODO
+This zip file contains a pre-compiled binary of the inpainting Gimp Plug-in 
+(http://martinjrobins.github.io/inpaintGimpPlugin/). This comes as a zip file
+which should be extracted into your GIMP user directory. 
+For example, C:\Users\username\.gimp-2.8\ would be the correct directory for
+user "username" and GIMP version 2.8.
 
 
 EOF

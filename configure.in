@@ -56,7 +56,7 @@ changequote([,])dnl
 dnl --------------------------------------------------------------------
 dnl Compiling for Win32.
 dnl --------------------------------------------------------------------
-case $host_os in
+case $host in
   *mingw* )
     compile_for_win32=yes
     ;;
@@ -71,9 +71,9 @@ dnl --------------------------------------------------------------------
 dnl Extra options when compiling for Win32.
 dnl --------------------------------------------------------------------
 if test x$compile_for_win32 = xyes; then
-
-  CFLAGS="$CFLAGS -mno-cygwin -mwindows -mms-bitfields -static-libstdc++ -static-libgcc"
-
+  echo "we are compiling for win32, set CFLAGS and LIBS accordingly"
+  CFLAGS="$CFLAGS -mwindows -mms-bitfields -static-libstdc++ -static-libgcc"
+  CPPFLAGS="$CPPFLAGS -mwindows -mms-bitfields -static-libstdc++ -static-libgcc"
   # As of 2009-09-16, -lgthread-2.0 does not appear in the package
   # configuration of the Win32 Gimp developer package (download from
   # 'http://www.gimp.org/~tml/gimp/win32/gimp-dev-2.4.zip'). But the

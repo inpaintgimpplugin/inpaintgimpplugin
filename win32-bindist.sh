@@ -58,3 +58,4 @@ make install
 zip_script=$dirname/win32-makezip.sh
 
 $zip_script $installdir win64
+

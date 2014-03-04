@@ -35,27 +35,3 @@ make install
 zip_script=$dirname/win32-makezip.sh
 
 $zip_script $installdir win32
-
-# The binaries will be installed here.
-installdir=$here/win64
-
-# Execute the configure script passing the specific options for Win64.
-$cfg_script \
-    --with-prefix=/scratch/robinsonm/w64/usr_w64_gtk2_22 \
-    --host=x86_64-w64-mingw32               \
-    --enable-user-install=yes              \
-    --with-user-install-dir="$installdir"
-
-# Make sure that the installation is empty before we start.
-rm -rf $installdir
-mkdir -p $installdir
-
-make clean
-make
-make install
-
-# Script for creating Win64 zip.
-zip_script=$dirname/win32-makezip.sh
-
-$zip_script $installdir win64
-

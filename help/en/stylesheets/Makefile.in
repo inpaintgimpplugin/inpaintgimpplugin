@@ -32,7 +32,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-subdir = help/images
+subdir = help/en/stylesheets
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/gimp-plugin-directories.m4 \
@@ -72,8 +72,8 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(helpdatadir)"
-DATA = $(helpdata_DATA)
+am__installdirs = "$(DESTDIR)$(stylesheetdir)"
+DATA = $(stylesheet_DATA)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
@@ -196,14 +196,12 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-helpdatadir = $(DATADIR)/help/images
-helpdata_DATA = \
-	blacktocat.png	\
-	icon_download.png	\
-	sprite_download.png	\
-	sprite_download2.png
+stylesheetdir = $(DATADIR)/help/en/stylesheets
+stylesheet_DATA = \
+	pygment_trac.css	\
+	stylesheet.css	
 
-EXTRA_DIST = $(helpdata_DATA)
+EXTRA_DIST = $(stylesheet_DATA)
 all: all-am
 
 .SUFFIXES:
@@ -216,9 +214,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__confi
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu help/images/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu help/en/stylesheets/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu help/images/Makefile
+	  $(AUTOMAKE) --gnu help/en/stylesheets/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -237,24 +235,24 @@ $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
-install-helpdataDATA: $(helpdata_DATA)
+install-stylesheetDATA: $(stylesheet_DATA)
 	@$(NORMAL_INSTALL)
-	test -z "$(helpdatadir)" || $(MKDIR_P) "$(DESTDIR)$(helpdatadir)"
-	@list='$(helpdata_DATA)'; test -n "$(helpdatadir)" || list=; \
+	test -z "$(stylesheetdir)" || $(MKDIR_P) "$(DESTDIR)$(stylesheetdir)"
+	@list='$(stylesheet_DATA)'; test -n "$(stylesheetdir)" || list=; \
 	for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  echo "$$d$$p"; \
 	done | $(am__base_list) | \
 	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(helpdatadir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(helpdatadir)" || exit $$?; \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(stylesheetdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(stylesheetdir)" || exit $$?; \
 	done
 
-uninstall-helpdataDATA:
+uninstall-stylesheetDATA:
 	@$(NORMAL_UNINSTALL)
-	@list='$(helpdata_DATA)'; test -n "$(helpdatadir)" || list=; \
+	@list='$(stylesheet_DATA)'; test -n "$(stylesheetdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(helpdatadir)'; $(am__uninstall_files_from_dir)
+	dir='$(DESTDIR)$(stylesheetdir)'; $(am__uninstall_files_from_dir)
 tags: TAGS
 TAGS:
 
@@ -296,7 +294,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(helpdatadir)"; do \
+	for dir in "$(DESTDIR)$(stylesheetdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -349,7 +347,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-helpdataDATA
+install-data-am: install-stylesheetDATA
 
 install-dvi: install-dvi-am
 
@@ -393,20 +391,21 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-helpdataDATA
+uninstall-am: uninstall-stylesheetDATA
 
 .MAKE: install-am install-strip
 
 .PHONY: all all-am check check-am clean clean-generic distclean \
 	distclean-generic distdir dvi dvi-am html html-am info info-am \
 	install install-am install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am \
-	install-helpdataDATA install-html install-html-am install-info \
-	install-info-am install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip install-stylesheetDATA installcheck \
 	installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
-	pdf-am ps ps-am uninstall uninstall-am uninstall-helpdataDATA
+	pdf-am ps ps-am uninstall uninstall-am \
+	uninstall-stylesheetDATA
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

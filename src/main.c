@@ -110,7 +110,7 @@ query (void)
 	help_uri = g_filename_to_uri (help_path, NULL, NULL);
 	g_free (help_path);
 
-	gimp_plugin_help_register ("http://developer.gimp.org/plug-in-template/help",
+	gimp_plugin_help_register ("http://inpaintgimpplugin.github.io/",
 			help_uri);
 
 

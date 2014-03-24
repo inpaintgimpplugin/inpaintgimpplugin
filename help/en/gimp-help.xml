@@ -1,4 +1,4 @@
 <?xml version="1.0"?>
-<gimp-help xmlns:template="http://developer.gimp.org/plug-in-template/help">
-  <help-item template:id="gimp-inpaint-BCT" ref="index.html" />
+<gimp-help xmlns:template="http://inpaintgimpplugin.github.io/">
+  <help-item template:id="gimp-inpaint-BCT" ref="doc.html" />
 </gimp-help>

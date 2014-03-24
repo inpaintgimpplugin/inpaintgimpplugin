@@ -7126,7 +7126,7 @@ fi
 
 
 
-ac_config_files="$ac_config_files Makefile src/Makefile po/Makefile.in help/Makefile help/en/Makefile help/images/Makefile"
+ac_config_files="$ac_config_files Makefile src/Makefile po/Makefile.in help/Makefile help/en/Makefile help/images/Makefile help/en/stylesheets/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -7888,6 +7888,7 @@ do
     "help/Makefile") CONFIG_FILES="$CONFIG_FILES help/Makefile" ;;
     "help/en/Makefile") CONFIG_FILES="$CONFIG_FILES help/en/Makefile" ;;
     "help/images/Makefile") CONFIG_FILES="$CONFIG_FILES help/images/Makefile" ;;
+    "help/en/stylesheets/Makefile") CONFIG_FILES="$CONFIG_FILES help/en/stylesheets/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

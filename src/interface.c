@@ -206,7 +206,7 @@ gboolean dialog (
 
   GtkWidget* dlg = gimp_dialog_new (text, PLUGIN_NAME,
                          NULL, 0,
-			 gimp_standard_help_func, "plug-in-template",
+			 gimp_standard_help_func, "gimp-inpaint-BCT",
 
 			 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 			 GTK_STOCK_APPLY, GTK_RESPONSE_APPLY,

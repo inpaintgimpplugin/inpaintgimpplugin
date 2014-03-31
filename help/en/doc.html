@@ -36,25 +36,28 @@
       <section id="main_content" class="inner">
         <h3>
 <a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Plug-in Documentation</h3>
+<p> Below is a reproduction of the inpainting plugin window with some extra red labels. See text below for an explanation of all the labelled parameters for the plugin.
+
+<img alt="" src="images/inpaint_window_documentation.jpg">
 <dl>
-<dt>Source</dt>
-<dd>- image to be inpainted</dd>
-<dt>Mask</dt>
-<dd>- mask image (optional)</dd>
-<dt>Stop Path</dt>
+<dt>(a) Source</dt>
+<dd>- Select layer to be inpainted</dd>
+<dt>(b) Mask</dt>
+<dd>- binary mask image (optional)</dd>
+<dt>(c) Stop Path</dt>
 <dd>- stop path (optional)</dd>
-<dt>Mask Type</dt>
-<dd>- "Selection" uses current selection as the region to be inpainted. "Binary Mask" uses a given image (see Mask option above) as the mask. ".. with Stop Path" uses a given stop path to defined the ordering.</dd>
-<dt>Mask Threshold</dt>
+<dt>(d) Mask Type</dt>
+<dd>- Select type of region to be inpainted. Choose between "Selection" (uses current selection as the region to be inpainted) or "Binary Mask" (uses a given layer chosen using (b), the "Mask" option). If a stop path has been selected, then ".. with Stop Path" will be appended to each of these options. Use the stop path to define the inpainting ordering.</dd>
+<dt>(e) Mask Threshold</dt>
 <dd>- sets the threshold to use for the Binary Mask image. Pixels with a value above this threshold will be inpainted.</dd>
-<dt>epsilon</dt>
-<dd>- kernel width in pixels</dd>
-<dt>kappa</dt>
-<dd>- kappa</dd>
-<dt>sigma</dt>
-<dd>- sigma</dd>
-<dt>rho</dt>
-<dd>- rho</dd>
+<dt>(f) Epsilon</dt>
+<dd>- Kernel width in pixels. This defines the length scale of the features to be inpainted. Image features smaller than this width will be ignored / smoothed out</dd>
+<dt>(g) Kappa</dt>
+<dd>- TBC </dd>
+<dt>(h) Sigma</dt>
+<dd>- Structure tensor parameters </dd>
+<dt>(i) Rho</dt>
+<dd>- Structure tensor parameters </dd>
 </dl>			
 </section>
     </div>

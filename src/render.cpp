@@ -880,22 +880,25 @@ render (PlugInVals *vals) {
 	gimp_drawable_mask_bounds(image->drawable_id, &data.xmin, &data.ymin, &data.xmax, &data.ymax);
 	data.rows = data.ymax - data.ymin;
 	data.cols = data.xmax - data.xmin;
-	data.size = data.rows * data.cols;
 	gint image_width = gimp_drawable_width(vals->image_drawable_id);
 	gint image_height = gimp_drawable_height(vals->image_drawable_id);
-	if ((data.cols < image_width) && (data.rows < image_height)) {
+	if (data.cols < image_width) {
 		data.xmin -= vals->epsilon + 1;
 		if (data.xmin < 0) data.xmin = 0;
 		data.xmax += vals->epsilon + 1;
 		if (data.xmax > image_width) data.xmax = image_width;
+		data.cols = data.xmax - data.xmin;
+	}
+
+	if (data.rows < image_height) {
 		data.ymin -= vals->epsilon + 1;
 		if (data.ymin < 0) data.ymin = 0;
 		data.ymax += vals->epsilon + 1;
 		if (data.ymax > image_height) data.ymax = image_height;
 		data.rows = data.ymax - data.ymin;
-		data.cols = data.xmax - data.xmin;
-		data.size = data.rows * data.cols;
 	}
+	data.size = data.rows * data.cols;
+
 
 	gint mask_width = gimp_drawable_width(vals->mask_drawable_id);
 	gint mask_height = gimp_drawable_height(vals->mask_drawable_id);

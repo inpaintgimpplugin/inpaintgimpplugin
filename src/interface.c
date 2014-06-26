@@ -377,16 +377,16 @@ gboolean dialog (
    gtk_widget_show (table);
 
 
-  interface_vals.epsilon_scale = gimp_scale_entry_new (GTK_TABLE (table), 0, 0,"_Pixel neighborhood (epsilon):", SCALE_WIDTH, 0,vals->epsilon, 1, SCALE_MAX, 0.1, 0.2, EPS_DIGITS,TRUE, 0, 0,NULL, NULL);
+  interface_vals.epsilon_scale = gimp_scale_entry_new (GTK_TABLE (table), 0, 0,"_Pixel neighborhood (epsilon):", SCALE_WIDTH, 0,vals->epsilon, 1, SCALE_MAX, 0.5, 0.2, EPS_DIGITS,TRUE, 0, 0,NULL, NULL);
   g_signal_connect (interface_vals.epsilon_scale, "value_changed", 	G_CALLBACK(gimp_float_adjustment_update), &vals->epsilon);
 
-  interface_vals.kappa_scale = gimp_scale_entry_new (GTK_TABLE (table), 0, 1, "_Sharpness (kappa in %):", SCALE_WIDTH, 0,	vals->kappa, 0, CONV_MAX, 0.01, 0.1, KAPPA_DIGITS,TRUE, 0, 0,NULL, NULL);
+  interface_vals.kappa_scale = gimp_scale_entry_new (GTK_TABLE (table), 0, 1, "_Sharpness (kappa in %):", SCALE_WIDTH, 0,	vals->kappa, 0, CONV_MAX, 1, 0.1, KAPPA_DIGITS,TRUE, 0, 0,NULL, NULL);
   g_signal_connect (interface_vals.kappa_scale, "value_changed", 	G_CALLBACK(gimp_float_adjustment_update), &vals->kappa);
 
-  interface_vals.sigma_scale = gimp_scale_entry_new (GTK_TABLE (table), 0, 2, "_Pre-smoothing (sigma):", SCALE_WIDTH, 0,	vals->sigma, 0, SCALE_MAX, 0.001, 0.1, SMOOTH_DIGITS,TRUE, 0, 0,NULL, NULL);
+  interface_vals.sigma_scale = gimp_scale_entry_new (GTK_TABLE (table), 0, 2, "_Pre-smoothing (sigma):", SCALE_WIDTH, 0,	vals->sigma, 0, SCALE_MAX, 0.1, 0.1, SMOOTH_DIGITS,TRUE, 0, 0,NULL, NULL);
   g_signal_connect (interface_vals.sigma_scale, "value_changed", 	G_CALLBACK(gimp_float_adjustment_update), &vals->sigma);
 
-  interface_vals.rho_scale = gimp_scale_entry_new (GTK_TABLE (table), 0, 3, "_Post-smoothing (rho):", SCALE_WIDTH, 0,	 vals->rho, 0.001, SCALE_MAX, 0.001, 0.1, SMOOTH_DIGITS,TRUE, 0, 0,NULL, NULL);
+  interface_vals.rho_scale = gimp_scale_entry_new (GTK_TABLE (table), 0, 3, "_Post-smoothing (rho):", SCALE_WIDTH, 0,	 vals->rho, 0.001, SCALE_MAX, 0.1, 0.1, SMOOTH_DIGITS,TRUE, 0, 0,NULL, NULL);
   g_signal_connect (interface_vals.rho_scale, "value_changed", 	G_CALLBACK(gimp_float_adjustment_update), &vals->rho);
 
 
